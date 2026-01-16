@@ -1,52 +1,38 @@
 import { SignUp } from "@clerk/nextjs";
-import { shadcn } from "@clerk/themes";
 import { LandmarkIcon } from "lucide-react";
-import { Metadata } from "next";
-import { FooterAuth } from "../../components";
+import type { Metadata } from "next";
+import { clerkAppearanceSignUp } from "@/lib/auth/ClerkAppearance";
 
 export const metadata: Metadata = {
   title: "Crear cuenta | PrestaMax",
   description:
-    "Crea tu cuenta en PrestaMax, la plataforma moderna para administrar clientes, pagos, intereses y reportes con eficiencia.",
-  authors: [{ name: "Cristian Andres Castro Rojas" }],
+    "Crea tu cuenta en PrestaMax y accede a tus herramientas de gestión financiera.",
 };
 
 export default function SignUpPage() {
   return (
-    <div className="flex flex-col min-h-screen bg-linear-to-br from-white to-blue-50">
-      {/* Contenido principal */}
-      <div className="flex flex-col flex-1 items-center justify-center px-4 py-10 gap-8 w-full">
-        {/* Logo */}
-        <LandmarkIcon className="w-14 h-auto text-blue-600" />
+    <section className="flex w-full flex-col items-center px-4 py-8 sm:py-12">
+      <div className="flex w-full max-w-md flex-col items-center gap-6">
+        {/* Logo / Icon */}
+        <LandmarkIcon
+          className="h-12 w-12 text-primary sm:h-14 sm:w-14"
+          aria-hidden="true"
+        />
 
-        {/* Título y descripción */}
-        <div className="text-center space-y-3 max-w-sm">
-          <h1 className="text-3xl font-bold tracking-tight text-neutral-900">
-            Crea tu cuenta en <span className="text-blue-600">PrestaMax</span>
+        {/* Header */}
+        <div className="space-y-2 text-center">
+          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+            Crea tu cuenta en <span className="text-primary">PrestaMax</span>
           </h1>
-          <p className="text-base text-neutral-600 leading-relaxed">
-            Regístrate para acceder a tus herramientas de gestión,
-            administración y control financiero.
+          <p className="text-sm text-muted-foreground sm:text-base">
+            Regístrate para acceder a tus herramientas de gestión y control
+            financiero.
           </p>
         </div>
 
-        {/* Formulario Clerk */}
-        <SignUp
-          appearance={{
-            theme: shadcn,
-            elements: {
-              card: "shadow-xl border rounded-xl bg-white w-full",
-              formButtonPrimary:
-                "bg-blue-600 hover:bg-blue-700 text-white border-none transition",
-              headerTitle: "text-neutral-900",
-              headerSubtitle: "text-neutral-600",
-            },
-          }}
-        />
+        {/* Clerk SignUp */}
+        <SignUp appearance={clerkAppearanceSignUp} />
       </div>
-
-      {/* Footer */}
-      <FooterAuth />
-    </div>
+    </section>
   );
 }
