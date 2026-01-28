@@ -1,9 +1,20 @@
-import { type Metadata } from "next";
-import { ClerkProvider } from "@clerk/nextjs";
-import { Nunito } from "next/font/google";
 import "./globals.css";
-import { shadcn } from "@clerk/themes";
+
+// Librerías externas
+import { ClerkProvider } from "@clerk/nextjs";
 import { esES } from "@clerk/localizations";
+import { shadcn } from "@clerk/themes";
+
+// Next.js
+import type { Metadata } from "next";
+import { cookies } from "next/headers";
+
+// Fonts
+import { Nunito } from "next/font/google";
+
+// Componentes internos
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { Toaster } from "@/components/ui/sonner";
 
 const nunito = Nunito({
   variable: "--font-nunito",
@@ -17,16 +28,17 @@ export const metadata: Metadata = {
   authors: [{ name: "Cristian Andres Castro Rojas" }],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+  const defaultOpen = cookieStore.get("sidebar_state")?.value === "true";
+
   return (
     <ClerkProvider
-      appearance={{
-        theme: shadcn,
-      }}
+      appearance={{ theme: shadcn }}
       localization={esES}
     >
       <html lang="es">
@@ -34,7 +46,10 @@ export default function RootLayout({
           className={`${nunito.className} antialiased`}
           cz-shortcut-listen="true"
         >
-          {children}
+          <SidebarProvider defaultOpen={defaultOpen}>
+            <main className="flex-1">{children}</main>
+          </SidebarProvider>
+          <Toaster />
         </body>
       </html>
     </ClerkProvider>
