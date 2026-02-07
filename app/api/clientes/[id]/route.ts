@@ -1,4 +1,4 @@
-import { ClienteService } from "@/features/clientes/Service";
+import { ClienteService } from "@/features/clientes/service";
 import { NextResponse } from "next/server";
 
 

@@ -4,15 +4,7 @@ import { useEffect, useState } from "react";
 import { Path, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import {
-  Save,
-  Eraser,
-  ChevronDownIcon,
-  User,
-  Mail,
-  MapPin,
-  CalendarIcon,
-} from "lucide-react";
+import { Save, Eraser, User, Mail, MapPin, CalendarIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -49,6 +41,7 @@ import {
 } from "../../Repository/UbicacionRepository";
 import { useRouter } from "next/navigation";
 import { API_URL } from "@/config/api";
+import { createCliente } from "../../data/createCliente";
 
 interface Props {
   onSuccess?: () => void;
@@ -99,59 +92,41 @@ export function NuevoClienteForm({
     const toastId = toast.loading("Registrando cliente...");
 
     try {
-      const response = await fetch(`${API_URL}/api/clientes`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
+      const result = await createCliente(values);
+
+      toast.success("Completado", {
+        description: result.message ?? "Guardado correctamente",
+        id: toastId,
       });
 
-      const result: unknown = await response.json();
-
-      if (!response.ok) {
-        const errorMsg =
-          result && typeof result === "object" && "error" in result
-            ? String(result.error)
-            : "Error inesperado";
-        if (response.status === 409)
-          return toast.warning("Dato duplicado", {
-            description: errorMsg,
-            id: toastId,
-          });
-        if (
-          response.status === 400 &&
-          result &&
-          typeof result === "object" &&
-          "issues" in result
-        ) {
-          (result.issues as { campo: string; mensaje: string }[]).forEach(
-            (issue) => {
-              form.setError(issue.campo as Path<CreateClienteInput>, {
-                message: issue.mensaje,
-              });
-            },
-          );
-          return toast.error("Validación fallida", {
-            description: "Revisa los campos marcados",
-            id: toastId,
-          });
-        }
-        throw new Error(errorMsg);
-      }
-
-      const successMsg =
-        result && typeof result === "object" && "message" in result
-          ? String(result.message)
-          : "Guardado correctamente";
-      toast.success("Completado", { description: successMsg, id: toastId });
       form.reset();
       router.refresh();
-      if (onSuccess) onSuccess();
-    } catch (error: unknown) {
-      const finalError =
-        error instanceof Error
-          ? error.message
-          : "No se pudo conectar con el servidor";
-      toast.error("Error", { description: finalError, id: toastId });
+      onSuccess?.();
+    } catch (error: any) {
+      if (error.status === 409) {
+        return toast.warning("Dato duplicado", {
+          description: error.message,
+          id: toastId,
+        });
+      }
+
+      if (error.status === 400 && Array.isArray(error.issues)) {
+        error.issues.forEach((issue: { campo: string; mensaje: string }) => {
+          form.setError(issue.campo as Path<CreateClienteInput>, {
+            message: issue.mensaje,
+          });
+        });
+
+        return toast.error("Validación fallida", {
+          description: "Revisa los campos marcados",
+          id: toastId,
+        });
+      }
+
+      toast.error("Error", {
+        description: error.message ?? "No se pudo conectar con el servidor",
+        id: toastId,
+      });
     } finally {
       setLoading(false);
     }
