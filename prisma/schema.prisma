@@ -6,3 +6,63 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+model Departamento {
+  id_departamento     Int    @id @default(autoincrement())
+  nombre_departamento String @unique @db.VarChar(100) // Recomendado: nombres de depto únicos
+
+  ciudades Ciudad[]
+  clientes Cliente[]
+
+  @@map("departamento")
+}
+
+model Ciudad {
+  id_ciudad     Int    @id @default(autoincrement())
+  nombre_ciudad String @db.VarChar(100)
+
+  id_departamento Int
+  departamento    Departamento @relation(fields: [id_departamento], references: [id_departamento])
+
+  clientes Cliente[]
+
+  @@unique([nombre_ciudad, id_departamento]) // <--- Regla: Ciudad única por Departamento
+  @@map("ciudad")
+}
+
+model TipoDocumento {
+  id_tipo_documento     Int    @id @default(autoincrement())
+  nombre_tipo_documento String @db.VarChar(100)
+  abreviatura_tipo_doc  String @unique @db.VarChar(10) // <--- Regla: Abreviatura única
+
+  clientes Cliente[]
+
+  @@map("tipo_documento")
+}
+
+model Cliente {
+  id               Int      @id @default(autoincrement())
+  nombre           String   @db.VarChar(100)
+  apellido         String   @db.VarChar(100)
+  numero_documento String   @unique @db.VarChar(50)
+  correo           String   @unique @db.VarChar(150)
+  fecha_nacimiento DateTime @db.Date
+  telefono         String   @db.VarChar(20)
+  barrio           String   @db.VarChar(100)
+  direccion        String   @db.VarChar(200)
+  estado           Boolean  @default(true)
+  created_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt
+
+  // Relaciones
+  id_tipo_documento Int
+  tipo_documento    TipoDocumento @relation(fields: [id_tipo_documento], references: [id_tipo_documento])
+
+  id_ciudad Int
+  ciudad    Ciudad @relation(fields: [id_ciudad], references: [id_ciudad])
+
+  id_departamento Int
+  departamento    Departamento @relation(fields: [id_departamento], references: [id_departamento])
+
+  @@map("cliente")
+}
