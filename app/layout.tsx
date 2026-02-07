@@ -49,7 +49,7 @@ export default async function RootLayout({
           <SidebarProvider defaultOpen={defaultOpen}>
             <main className="flex-1">{children}</main>
           </SidebarProvider>
-          <Toaster />
+          <Toaster richColors closeButton position="top-right"/>
         </body>
       </html>
     </ClerkProvider>
