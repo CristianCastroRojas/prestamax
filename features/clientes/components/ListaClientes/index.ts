@@ -1,2 +1,2 @@
 export * from "./columns";
-export * from "./ClienteTable.tsx";
+export * from "./ClienteTable";
