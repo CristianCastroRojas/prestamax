@@ -12,6 +12,7 @@ const adapter = new PrismaPg({
 const prisma =
   globalForPrisma.prisma ||
   new PrismaClient({
+    log: ["query"],
     adapter,
   });
 
