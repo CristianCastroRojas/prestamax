@@ -5,8 +5,8 @@ import {
 } from "@/features/clientes/components/ListaClientes";
 import { ClienteCardMobile } from "@/features/clientes/components/ListaClientes/ClienteCardMobile";
 import { PaginationControls } from "@/features/clientes/components/PaginationControls/PaginationControls";
-import { GetTipoDocumentosService } from "@/features/clientes/Repository/TipoDocumentoRepository";
-import { GetUbicacionesService } from "@/features/clientes/Repository/UbicacionRepository";
+import { GetTipoDocumentosService } from "@/features/clientes/repository/TipoDocumentoRepository";
+import { GetUbicacionesService } from "@/features/clientes/repository/UbicacionRepository";
 import { GetAllClienteService } from "@/features/clientes/service/GetAllCliente";
 // Tipado de props para Next.js 15
 type SearchParams = Promise<{ page?: string; limit?: string }>;
@@ -42,14 +42,26 @@ export default async function ClientesPage(props: {
         <div className="w-full border rounded-lg bg-white shadow-sm overflow-hidden">
           {/* VISTA DESKTOP */}
           <div className="hidden lg:block">
-            <ClienteTable columns={columns} data={clientes} />
+            <ClienteTable
+              columns={columns}
+              data={clientes}
+              tiposDocumento={tiposDocumento}
+              departamentos={departamentos}
+              ciudades={ciudades}
+            />
           </div>
 
           {/* VISTA MÓVIL */}
           <div className="lg:hidden p-4 space-y-4">
             {clientes.length > 0 ? (
               clientes.map((cliente) => (
-                <ClienteCardMobile key={cliente.id} cliente={cliente} />
+                <ClienteCardMobile
+                  key={cliente.id}
+                  cliente={cliente}
+                  tiposDocumento={tiposDocumento}
+                  departamentos={departamentos}
+                  ciudades={ciudades}
+                />
               ))
             ) : (
               <div className="text-center py-10 text-muted-foreground">
