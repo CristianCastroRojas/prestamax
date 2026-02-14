@@ -4,10 +4,11 @@ import { useEffect, useState } from "react";
 import { Path, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { Save, Eraser, User, Mail, MapPin, CalendarIcon } from "lucide-react";
+import { Save, Eraser, User, Mail, CalendarIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { es } from "date-fns/locale";
 import {
   Form,
   FormControl,
@@ -29,7 +30,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { Separator } from "@/components/ui/separator"; // Componente shadcn
+import { Separator } from "@/components/ui/separator";
 import {
   CreateClienteInput,
   createClienteSchema,
@@ -202,8 +203,12 @@ export function NuevoClienteForm({
                     }
                   >
                     <FormControl>
-                      <SelectTrigger className="bg-background">
-                        <SelectValue placeholder="Seleccionar tipo..." />
+                      {/* Añadimos min-w-0 para que el flexbox permita encoger el contenido */}
+                      <SelectTrigger className="bg-background w-full min-w-0 overflow-hidden">
+                        {/* El div con truncate asegura que el texto largo se convierta en ... */}
+                        <div className="truncate text-left w-full">
+                          <SelectValue placeholder="Seleccionar tipo..." />
+                        </div>
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -250,6 +255,7 @@ export function NuevoClienteForm({
                   <FormLabel className="text-xs font-bold uppercase text-muted-foreground/80 mb-1">
                     Fecha de nacimiento
                   </FormLabel>
+
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button
@@ -257,7 +263,11 @@ export function NuevoClienteForm({
                         className="w-full justify-between font-normal bg-background hover:bg-muted/50 transition-colors"
                       >
                         {field.value ? (
-                          new Date(field.value).toLocaleDateString()
+                          new Date(field.value).toLocaleDateString("es-ES", {
+                            day: "2-digit",
+                            month: "long",
+                            year: "numeric",
+                          })
                         ) : (
                           <span className="text-muted-foreground">
                             Seleccionar
@@ -266,14 +276,19 @@ export function NuevoClienteForm({
                         <CalendarIcon className="h-4 w-4 opacity-50 text-primary" />
                       </Button>
                     </PopoverTrigger>
+
                     <PopoverContent className="w-auto p-0" align="start">
                       <Calendar
                         mode="single"
+                        locale={es}
+                        selected={
+                          field.value ? new Date(field.value) : undefined
+                        }
                         onSelect={(d) => field.onChange(d?.toISOString())}
-                        initialFocus
                       />
                     </PopoverContent>
                   </Popover>
+
                   <FormMessage className="text-[11px]" />
                 </FormItem>
               )}
@@ -344,7 +359,7 @@ export function NuevoClienteForm({
                     value={field.value ? field.value.toString() : undefined}
                   >
                     <FormControl>
-                      <SelectTrigger className="bg-background">
+                      <SelectTrigger className="bg-background w-full">
                         <SelectValue placeholder="Seleccionar dpto..." />
                       </SelectTrigger>
                     </FormControl>
@@ -383,7 +398,7 @@ export function NuevoClienteForm({
                     }
                   >
                     <FormControl>
-                      <SelectTrigger className="bg-background">
+                      <SelectTrigger className="bg-background w-full">
                         <SelectValue placeholder="Seleccionar ciudad..." />
                       </SelectTrigger>
                     </FormControl>
