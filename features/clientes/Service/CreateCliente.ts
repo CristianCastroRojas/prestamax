@@ -1,6 +1,6 @@
 // features/clientes/services/CreateClienteService.ts
-import { CreateClienteDTO } from "../DTOs/CreateClienteDTO";
-import { ClienteRepository } from "../Repository/ClienteRepository";
+import { CreateClienteDTO } from "../dtos/CreateClienteDTO";
+import { ClienteRepository } from "../repository/ClienteRepository";
 
 export const CreateClienteService = {
   /**

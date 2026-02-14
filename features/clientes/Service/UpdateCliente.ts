@@ -1,6 +1,6 @@
 // features/clientes/services/UpdateClienteService.ts
-import { UpdateClienteDTO } from "../DTOs/UpdateClienteDTO";
-import { ClienteRepository } from "../Repository/ClienteRepository";
+import { UpdateClienteDTO } from "../dtos/UpdateClienteDTO";
+import { ClienteRepository } from "../repository/ClienteRepository";
 
 export const UpdateClienteService = {
   /**

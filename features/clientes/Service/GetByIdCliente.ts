@@ -1,5 +1,5 @@
-import { GetByIdClienteDTO } from "../DTOs/GetByIdClienteDTO";
-import { ClienteRepository } from "../Repository/ClienteRepository";
+import { GetByIdClienteDTO } from "../dtos/GetByIdClienteDTO";
+import { ClienteRepository } from "../repository/ClienteRepository";
 
 export const GetByIdClienteService = {
   async execute(id: number): Promise<GetByIdClienteDTO> {

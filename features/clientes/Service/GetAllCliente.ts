@@ -1,6 +1,6 @@
-import { GetAllClienteDTO } from "../DTOs/GetAllClienteDTO";
-import { PaginatedResponseDTO } from "../DTOs/PaginatedResponseDTO";
-import { ClienteRepository } from "../Repository/ClienteRepository";
+import { GetAllClienteDTO } from "../dtos/GetAllClienteDTO";
+import { PaginatedResponseDTO } from "../dtos/PaginatedResponseDTO";
+import { ClienteRepository } from "../repository/ClienteRepository";
 
 export const GetAllClienteService = {
   async execute(

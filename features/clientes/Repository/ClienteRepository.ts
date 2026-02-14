@@ -1,9 +1,10 @@
 import prisma from "@/lib/prisma";
-import { CreateClienteDTO } from "../DTOs/CreateClienteDTO";
+import { CreateClienteDTO } from "../dtos/CreateClienteDTO";
+import { GetAllClienteDTO } from "../dtos/GetAllClienteDTO";
+import { GetByIdClienteDTO } from "../dtos/GetByIdClienteDTO";
+import { UpdateClienteDTO } from "../dtos/UpdateClienteDTO";
 
-import { GetByIdClienteDTO } from "../DTOs/GetByIdClienteDTO";
-import { GetAllClienteDTO } from "../DTOs/GetAllClienteDTO";
-import { UpdateClienteDTO } from "../DTOs/UpdateClienteDTO";
+
 
 export const ClienteRepository = {
   /**
@@ -52,12 +53,20 @@ export const ClienteRepository = {
         }),
       ]);
 
-      const mappedData = clientes.map((c) => ({
+      const mappedData: GetAllClienteDTO[] = clientes.map((c) => ({
         id: c.id,
         nombre: c.nombre,
         apellido: c.apellido,
         numero_documento: c.numero_documento,
+        correo: c.correo,
+        fecha_nacimiento: c.fecha_nacimiento.toISOString(),
+        telefono: c.telefono,
+        barrio: c.barrio,
+        direccion: c.direccion,
         estado: c.estado,
+        id_tipo_documento: c.id_tipo_documento,
+        id_ciudad: c.id_ciudad,
+        id_departamento: c.id_departamento,
         tipoDocumento: c.tipo_documento.nombre_tipo_documento || "N/A",
         ciudad: c.ciudad.nombre_ciudad || "N/A",
         departamento: c.departamento.nombre_departamento || "N/A",
