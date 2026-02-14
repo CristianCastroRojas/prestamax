@@ -8,11 +8,11 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { NuevoClienteForm } from "../NuevoClienteForm";
-import { TipoDocumentoDTO } from "../../Repository/TipoDocumentoRepository";
+import { TipoDocumentoDTO } from "../../repository/TipoDocumentoRepository";
 import {
   CiudadDTO,
   DepartamentoDTO,
-} from "../../Repository/UbicacionRepository";
+} from "../../repository/UbicacionRepository";
 
 type Props = {
   open: boolean;

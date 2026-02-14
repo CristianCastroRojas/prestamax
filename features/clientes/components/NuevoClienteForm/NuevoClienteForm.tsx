@@ -34,11 +34,11 @@ import {
   CreateClienteInput,
   createClienteSchema,
 } from "../../schemas/createcliente.schema";
-import { TipoDocumentoDTO } from "../../Repository/TipoDocumentoRepository";
+import { TipoDocumentoDTO } from "../../repository/TipoDocumentoRepository";
 import {
   CiudadDTO,
   DepartamentoDTO,
-} from "../../Repository/UbicacionRepository";
+} from "../../repository/UbicacionRepository";
 import { useRouter } from "next/navigation";
 import { API_URL } from "@/config/api";
 import { createCliente } from "../../data/createCliente";
