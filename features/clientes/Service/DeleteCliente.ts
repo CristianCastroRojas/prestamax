@@ -1,4 +1,4 @@
-import { ClienteRepository } from "../Repository/ClienteRepository";
+import { ClienteRepository } from "../repository/ClienteRepository";
 
 export const DeleteClienteService = {
   async execute(id: number) {

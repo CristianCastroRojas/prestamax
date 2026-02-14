@@ -1,5 +1,5 @@
 import { API_URL } from "@/config/api";
-import { GetByIdClienteDTO } from "@/features/clientes/DTOs/GetByIdClienteDTO";
+import { GetByIdClienteDTO } from "@/features/clientes/dtos/GetByIdClienteDTO";
 
 export async function getClienteById(
   id: number,

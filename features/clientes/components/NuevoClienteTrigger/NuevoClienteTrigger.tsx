@@ -4,11 +4,11 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { NuevoClienteSheet } from "../NuevoClienteSheet";
-import { TipoDocumentoDTO } from "../../Repository/TipoDocumentoRepository";
+import { TipoDocumentoDTO } from "../../repository/TipoDocumentoRepository";
 import {
   CiudadDTO,
   DepartamentoDTO,
-} from "../../Repository/UbicacionRepository";
+} from "../../repository/UbicacionRepository";
 
 interface Props {
   tiposDocumento: TipoDocumentoDTO[];

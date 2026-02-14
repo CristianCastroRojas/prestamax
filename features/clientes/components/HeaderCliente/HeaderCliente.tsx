@@ -1,9 +1,9 @@
 import { Users } from "lucide-react";
-import { TipoDocumentoDTO } from "../../Repository/TipoDocumentoRepository";
+import { TipoDocumentoDTO } from "../../repository/TipoDocumentoRepository";
 import {
   CiudadDTO,
   DepartamentoDTO,
-} from "../../Repository/UbicacionRepository";
+} from "../../repository/UbicacionRepository";
 import { NuevoClienteTrigger } from "../NuevoClienteTrigger";
 
 interface Props {

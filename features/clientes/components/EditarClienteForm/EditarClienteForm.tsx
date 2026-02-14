@@ -4,7 +4,15 @@ import { useEffect, useState } from "react";
 import { Path, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { Save, Eraser, User, Mail, MapPin, CalendarIcon } from "lucide-react";
+import {
+  Save,
+  Eraser,
+  User,
+  Mail,
+  MapPin,
+  CalendarIcon,
+  ShieldCheck,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,6 +23,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription,
 } from "@/components/ui/form";
 import {
   Select,
@@ -29,50 +38,54 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { Separator } from "@/components/ui/separator"; // Componente shadcn
+import { Separator } from "@/components/ui/separator";
+import { Switch } from "@/components/ui/switch";
+import { useRouter } from "next/navigation";
+import { updateCliente } from "../../data/updateCliente";
 import {
-  CreateClienteInput,
-  createClienteSchema,
-} from "../../schemas/createcliente.schema";
+  UpdateClienteInput,
+  updateClienteSchema,
+} from "../../schemas/updatecliente.schema";
+import { UpdateClienteDTO } from "../../dtos/UpdateClienteDTO";
 import { TipoDocumentoDTO } from "../../repository/TipoDocumentoRepository";
 import {
   CiudadDTO,
   DepartamentoDTO,
 } from "../../repository/UbicacionRepository";
-import { useRouter } from "next/navigation";
-import { API_URL } from "@/config/api";
-import { createCliente } from "../../data/createCliente";
 
 interface Props {
+  cliente: UpdateClienteDTO;
   onSuccess?: () => void;
   tiposDocumento: TipoDocumentoDTO[];
   departamentos: DepartamentoDTO[];
   ciudades: CiudadDTO[];
 }
 
-export function NuevoClienteForm({
+export function EditarClienteForm({
+  cliente,
   onSuccess,
   tiposDocumento,
   departamentos,
   ciudades,
 }: Props) {
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
-  const form = useForm<CreateClienteInput>({
-    resolver: zodResolver(createClienteSchema),
+  const form = useForm<UpdateClienteInput>({
+    resolver: zodResolver(updateClienteSchema),
     defaultValues: {
-      nombre: "",
-      apellido: "",
-      numero_documento: "",
-      correo: "",
-      fecha_nacimiento: "",
-      telefono: "",
-      direccion: "",
-      barrio: "",
-      estado: true,
-      id_tipo_documento: 0,
-      id_ciudad: 0,
-      id_departamento: 0,
+      nombre: cliente.nombre,
+      apellido: cliente.apellido,
+      numero_documento: cliente.numero_documento,
+      correo: cliente.correo || "",
+      fecha_nacimiento: cliente.fecha_nacimiento || "",
+      telefono: cliente.telefono || "",
+      direccion: cliente.direccion || "",
+      barrio: cliente.barrio || "",
+      estado: cliente.estado,
+      id_tipo_documento: cliente.id_tipo_documento,
+      id_ciudad: cliente.id_ciudad,
+      id_departamento: cliente.id_departamento,
     },
   });
 
@@ -82,37 +95,30 @@ export function NuevoClienteForm({
   );
 
   useEffect(() => {
-    form.setValue("id_ciudad", 0);
-  }, [deptoSeleccionado, form]);
+    // Solo resetear si el departamento cambia y es diferente al inicial del cliente
+    if (deptoSeleccionado !== cliente.id_departamento) {
+      form.setValue("id_ciudad", 0);
+    }
+  }, [deptoSeleccionado, form, cliente.id_departamento]);
 
-  const router = useRouter();
-
-  const onSubmit = async (values: CreateClienteInput) => {
+  const onSubmit = async (values: UpdateClienteInput) => {
     setLoading(true);
-    const toastId = toast.loading("Registrando cliente...");
+    const toastId = toast.loading("Actualizando cliente...");
 
     try {
-      const result = await createCliente(values);
+      const result = await updateCliente(cliente.id, values);
 
-      toast.success("Completado", {
-        description: result.message ?? "Guardado correctamente",
+      toast.success("Actualizado", {
+        description: result.message ?? "Información actualizada correctamente",
         id: toastId,
       });
 
-      form.reset();
       router.refresh();
       onSuccess?.();
     } catch (error: any) {
-      if (error.status === 409) {
-        return toast.warning("Dato duplicado", {
-          description: error.message,
-          id: toastId,
-        });
-      }
-
       if (error.status === 400 && Array.isArray(error.issues)) {
         error.issues.forEach((issue: { campo: string; mensaje: string }) => {
-          form.setError(issue.campo as Path<CreateClienteInput>, {
+          form.setError(issue.campo as Path<UpdateClienteInput>, {
             message: issue.mensaje,
           });
         });
@@ -138,6 +144,33 @@ export function NuevoClienteForm({
         onSubmit={form.handleSubmit(onSubmit)}
         className="space-y-6 px-4 pb-8 pt-2"
       >
+        {/* --- SECCIÓN: ESTADO DEL CLIENTE (Toggle) --- */}
+        <div className="bg-muted/30 p-4 rounded-xl border border-border/50">
+          <FormField
+            control={form.control}
+            name="estado"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-center justify-between rounded-lg">
+                <div className="space-y-0.5">
+                  <FormLabel className="text-sm font-bold uppercase tracking-wider flex items-center gap-2">
+                    <ShieldCheck className="h-4 w-4 text-primary" />
+                    Estado de la cuenta
+                  </FormLabel>
+                  <FormDescription className="text-xs">
+                    Define si el cliente está activo para realizar operaciones.
+                  </FormDescription>
+                </div>
+                <FormControl>
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+        </div>
+
         {/* --- SECCIÓN: INFORMACIÓN PERSONAL --- */}
         <div className="space-y-4">
           <div className="flex items-center gap-2 text-primary font-semibold text-sm uppercase tracking-wider">
@@ -269,6 +302,9 @@ export function NuevoClienteForm({
                     <PopoverContent className="w-auto p-0" align="start">
                       <Calendar
                         mode="single"
+                        selected={
+                          field.value ? new Date(field.value) : undefined
+                        }
                         onSelect={(d) => field.onChange(d?.toISOString())}
                         initialFocus
                       />
@@ -457,7 +493,7 @@ export function NuevoClienteForm({
             ) : (
               <>
                 <Save className="mr-2 h-4 w-4" />
-                Guardar Cliente
+                Actualizar Cliente
               </>
             )}
           </Button>
@@ -470,7 +506,7 @@ export function NuevoClienteForm({
             disabled={loading}
           >
             <Eraser className="mr-2 h-4 w-4" />
-            Limpiar
+            Restaurar
           </Button>
         </div>
       </form>

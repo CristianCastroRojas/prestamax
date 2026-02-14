@@ -4,14 +4,17 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
 import { Eye, Edit, Trash2, CalendarDays } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { GetAllClienteDTO } from "../../DTOs/GetAllClienteDTO";
 import { cn } from "@/lib/utils";
-import { DeleteClienteAction } from "../DeleteClienteAction/DeleteClienteAction";
 import Link from "next/link";
 import { formatDate } from "@/lib/formatters/date";
 import { EditClienteSheet } from "../EditarClienteSheet/EditarClienteSheet";
+import { DeleteClienteAction } from "../DeleteClienteAction/DeleteClienteAction";
 
-export const columns: ColumnDef<GetAllClienteDTO>[] = [
+import { GetAllClienteDTO } from "../../dtos/GetAllClienteDTO";
+
+export type ClienteColumnsList = GetAllClienteDTO;
+
+export const columns: ColumnDef<ClienteColumnsList>[] = [
   {
     header: "Nombre completo",
     accessorFn: (row) => `${row.nombre} ${row.apellido}`,
@@ -96,8 +99,9 @@ export const columns: ColumnDef<GetAllClienteDTO>[] = [
     id: "acciones",
     header: () => <div className="text-right">Acciones</div>,
     enableSorting: false,
-    cell: ({ row }) => {
-      const cliente = row.original; // Extraemos el objeto cliente
+    cell: ({ row, table }) => {
+      const cliente = row.original;
+      const meta = table.options.meta as any;
 
       return (
         <div className="flex items-center justify-end gap-1">
@@ -112,16 +116,13 @@ export const columns: ColumnDef<GetAllClienteDTO>[] = [
             </Button>
           </Link>
 
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 text-amber-600 hover:text-amber-700 hover:bg-amber-50 transition-colors"
-            title="Editar"
-            onClick={() => console.log("Editar:", cliente)}
-          >
-            <Edit className="h-4 w-4" />
-          </Button>
-          {/* Inyectamos el componente con sus props */}
+          <EditClienteSheet
+            cliente={cliente}
+            tiposDocumento={meta?.tiposDocumento || []}
+            departamentos={meta?.departamentos || []}
+            ciudades={meta?.ciudades || []}
+          />
+
           <DeleteClienteAction
             clientId={cliente.id}
             clientName={`${cliente.nombre} ${cliente.apellido}`}

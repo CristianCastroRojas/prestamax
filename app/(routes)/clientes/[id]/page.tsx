@@ -23,7 +23,7 @@ import {
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { notFound } from "next/navigation";
-import { GetByIdClienteDTO } from "@/features/clientes/DTOs/GetByIdClienteDTO";
+import { GetByIdClienteDTO } from "@/features/clientes/dtos/GetByIdClienteDTO";
 import { cn } from "@/lib/utils";
 import { getClienteById } from "@/features/clientes/data/getClienteById";
 import { formatDate, formatDateTime } from "@/lib/formatters/date";

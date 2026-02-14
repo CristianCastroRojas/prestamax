@@ -5,16 +5,30 @@ import { Badge } from "@/components/ui/badge";
 import { User, FileText, MapPin, Calendar, Eye, Edit } from "lucide-react";
 import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { GetAllClienteDTO } from "../../DTOs/GetAllClienteDTO";
- // Importamos tu componente de borrado
+// Importamos tu componente de borrado
 import { cn } from "@/lib/utils";
 import { DeleteClienteAction } from "../DeleteClienteAction/DeleteClienteAction";
+import { ClienteColumnsList } from "./columns";
+import { EditClienteSheet } from "../EditarClienteSheet/EditarClienteSheet";
+import { TipoDocumentoDTO } from "../../repository/TipoDocumentoRepository";
+import {
+  CiudadDTO,
+  DepartamentoDTO,
+} from "../../repository/UbicacionRepository";
 
 interface ClienteCardMobileProps {
-  cliente: GetAllClienteDTO;
+  cliente: ClienteColumnsList;
+  tiposDocumento: TipoDocumentoDTO[];
+  departamentos: DepartamentoDTO[];
+  ciudades: CiudadDTO[];
 }
 
-export function ClienteCardMobile({ cliente }: ClienteCardMobileProps) {
+export function ClienteCardMobile({
+  cliente,
+  tiposDocumento,
+  departamentos,
+  ciudades,
+}: ClienteCardMobileProps) {
   const estado = cliente.estado ? "Activo" : "Inactivo";
 
   return (
@@ -111,13 +125,12 @@ export function ClienteCardMobile({ cliente }: ClienteCardMobileProps) {
             </Link>
 
             {/* Editar */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 text-amber-600 hover:bg-amber-50 rounded-full"
-            >
-              <Edit className="h-4 w-4" />
-            </Button>
+            <EditClienteSheet
+              cliente={cliente}
+              tiposDocumento={tiposDocumento}
+              departamentos={departamentos}
+              ciudades={ciudades}
+            />
 
             {/* Eliminar (Tu componente AlertDialog) */}
             <DeleteClienteAction
