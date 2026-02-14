@@ -47,7 +47,7 @@ import { updateCliente } from "../../data/updateCliente";
 import {
   UpdateClienteInput,
   updateClienteSchema,
-} from "../../schemas/updatecliente.schema";
+} from "../../schemas/update-cliente.schema";
 import { UpdateClienteDTO } from "../../dtos/UpdateClienteDTO";
 import { TipoDocumentoDTO } from "../../repository/TipoDocumentoRepository";
 import {

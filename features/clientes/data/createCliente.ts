@@ -1,7 +1,7 @@
 // src/data/cliente/createCliente.ts
 
 import { API_URL } from "@/config/api";
-import { CreateClienteInput } from "../schemas/createcliente.schema";
+import { CreateClienteInput } from "../schemas/create-cliente.schema";
 
 interface CreateClienteResponse {
   message?: string;

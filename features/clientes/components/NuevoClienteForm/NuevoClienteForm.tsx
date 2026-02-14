@@ -34,7 +34,7 @@ import { Separator } from "@/components/ui/separator";
 import {
   CreateClienteInput,
   createClienteSchema,
-} from "../../schemas/createcliente.schema";
+} from "../../schemas/create-cliente.schema";
 import { TipoDocumentoDTO } from "../../repository/TipoDocumentoRepository";
 import {
   CiudadDTO,

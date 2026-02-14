@@ -1,5 +1,5 @@
 import z from "zod";
-import { createClienteSchema } from "./createcliente.schema";
+import { createClienteSchema } from "./create-cliente.schema";
 
 export const updateClienteSchema = createClienteSchema.partial();
 

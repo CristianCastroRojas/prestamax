@@ -7,7 +7,7 @@ import { ClienteCardMobile } from "@/features/clientes/components/ListaClientes/
 import { PaginationControls } from "@/features/clientes/components/PaginationControls/PaginationControls";
 import { GetTipoDocumentosService } from "@/features/clientes/repository/TipoDocumentoRepository";
 import { GetUbicacionesService } from "@/features/clientes/repository/UbicacionRepository";
-import { GetAllClienteService } from "@/features/clientes/Service/GetAllCliente";
+import { GetAllClienteService } from "@/features/clientes/service/GetAllCliente";
 
 // Tipado de props para Next.js 15
 type SearchParams = Promise<{ page?: string; limit?: string }>;

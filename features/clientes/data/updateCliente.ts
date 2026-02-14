@@ -1,7 +1,7 @@
 // src/data/cliente/updateCliente.ts
 
 import { API_URL } from "@/config/api";
-import { UpdateClienteInput } from "../schemas/updatecliente.schema";
+import { UpdateClienteInput } from "../schemas/update-cliente.schema";
 
 interface UpdateClienteResponse {
   message?: string;

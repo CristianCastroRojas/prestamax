@@ -2,3 +2,8 @@ export * from "./HeaderCliente";
 export * from "./NuevoClienteTrigger";
 export * from "./NuevoClienteSheet";
 export * from "./NuevoClienteForm";
+export * from "./ListaClientes";
+export * from "./PaginationControls";
+export * from "./EditarClienteForm";
+export * from "./EditarClienteSheet";
+export * from "./DeleteClienteAction";
