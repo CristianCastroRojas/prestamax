@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 // Tu archivo de fachada
 import { createClienteSchema } from "@/features/clientes/schemas/createcliente.schema";
 import { ZodError } from "zod";
-import { ClienteService } from "@/features/clientes/service";
+import { ClienteService } from "@/features/clientes/Service";
 
 export async function GET(request: NextRequest) {
   try {

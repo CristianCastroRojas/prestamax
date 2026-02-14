@@ -1,6 +1,5 @@
-import { ClienteService } from "@/features/clientes/service";
+import { ClienteService } from "@/features/clientes/Service";
 import { NextResponse } from "next/server";
-
 
 export async function GET(
   req: Request,
