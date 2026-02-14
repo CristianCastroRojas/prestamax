@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { useState } from "react"
+import { useState } from "react";
 import {
   flexRender,
   getCoreRowModel,
@@ -8,7 +8,7 @@ import {
   useReactTable,
   ColumnDef,
   SortingState,
-} from "@tanstack/react-table"
+} from "@tanstack/react-table";
 
 import {
   Table,
@@ -17,18 +17,30 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from "@/components/ui/table";
+
+import { TipoDocumentoDTO } from "../../repository/TipoDocumentoRepository";
+import {
+  CiudadDTO,
+  DepartamentoDTO,
+} from "../../repository/UbicacionRepository";
 
 interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
-  data: TData[]
+  columns: ColumnDef<TData, TValue>[];
+  data: TData[];
+  tiposDocumento: TipoDocumentoDTO[];
+  departamentos: DepartamentoDTO[];
+  ciudades: CiudadDTO[];
 }
 
 export function ClienteTable<TData, TValue>({
   columns,
   data,
+  tiposDocumento,
+  departamentos,
+  ciudades,
 }: DataTableProps<TData, TValue>) {
-  const [sorting, setSorting] = useState<SortingState>([])
+  const [sorting, setSorting] = useState<SortingState>([]);
 
   const table = useReactTable({
     data,
@@ -39,7 +51,12 @@ export function ClienteTable<TData, TValue>({
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
-  })
+    meta: {
+      tiposDocumento,
+      departamentos,
+      ciudades,
+    },
+  });
 
   return (
     <div className="hidden lg:block w-full overflow-hidden">
@@ -103,5 +120,5 @@ export function ClienteTable<TData, TValue>({
         </Table>
       </div>
     </div>
-  )
+  );
 }
