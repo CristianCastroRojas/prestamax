@@ -12,7 +12,10 @@ const adapter = new PrismaPg({
 const prisma =
   globalForPrisma.prisma ||
   new PrismaClient({
-    log: ["query"],
+    log:
+      process.env.NODE_ENV === "development"
+        ? ["query", "error", "warn", "info"] // En desarrollo: Ver todo
+        : ["error", "warn"], // En producción: Solo lo crítico
     adapter,
   });
 
