@@ -41,7 +41,6 @@ import {
   DepartamentoDTO,
 } from "../../repository/UbicacionRepository";
 import { useRouter } from "next/navigation";
-import { API_URL } from "@/config/api";
 import { createCliente } from "../../data/createCliente";
 
 interface Props {
