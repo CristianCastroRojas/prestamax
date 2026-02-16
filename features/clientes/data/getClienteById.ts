@@ -1,11 +1,10 @@
-import { API_URL } from "@/config/api";
 import { GetByIdClienteDTO } from "@/features/clientes/dtos/GetByIdClienteDTO";
 
 export async function getClienteById(
   id: number,
 ): Promise<GetByIdClienteDTO | null> {
   try {
-    const response = await fetch(`${API_URL}/api/clientes/${id}`, {
+    const response = await fetch(`/api/clientes/${id}`, {
       next: {
         revalidate: 60,
       },

@@ -1,6 +1,5 @@
 // src/data/cliente/createCliente.ts
 
-import { API_URL } from "@/config/api";
 import { CreateClienteInput } from "../schemas/create-cliente.schema";
 
 interface CreateClienteResponse {
@@ -12,7 +11,7 @@ interface CreateClienteResponse {
 export async function createCliente(
   data: CreateClienteInput,
 ): Promise<CreateClienteResponse> {
-  const response = await fetch(`${API_URL}/api/clientes`, {
+  const response = await fetch(`/api/clientes`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

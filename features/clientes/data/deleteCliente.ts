@@ -1,7 +1,5 @@
-import { API_URL } from "@/config/api";
-
 export async function deleteCliente(clientId: number): Promise<void> {
-  const response = await fetch(`${API_URL}/api/clientes/${clientId}`, {
+  const response = await fetch(`/api/clientes/${clientId}`, {
     method: "DELETE",
   });
 

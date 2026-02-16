@@ -1,6 +1,5 @@
 // src/data/cliente/updateCliente.ts
 
-import { API_URL } from "@/config/api";
 import { UpdateClienteInput } from "../schemas/update-cliente.schema";
 
 interface UpdateClienteResponse {
@@ -14,7 +13,7 @@ export async function updateCliente(
   data: UpdateClienteInput,
 ): Promise<UpdateClienteResponse> {
   // En Windows/Next.js, asegúrate de que la URL no tenga doble slash por error
-  const response = await fetch(`${API_URL}/api/clientes/${id}`, {
+  const response = await fetch(`/api/clientes/${id}`, {
     method: "PATCH", // Usamos PATCH para actualizaciones parciales
     headers: {
       "Content-Type": "application/json",
