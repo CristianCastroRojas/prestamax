@@ -1,36 +1,47 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Prestamax
 
-## Getting Started
+## Versión 0.1.0
 
-First, run the development server:
+Esta versión corresponde al estado actual de la rama `main`.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Funcionalidades incluidas
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Autenticación
+- Autenticación de usuarios implementada con Clerk
+- Registro e inicio de sesión
+- Protección de rutas internas de la aplicación
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+### Módulo de Clientes
 
-To learn more about Next.js, take a look at the following resources:
+Se incluye el módulo **Clientes** con CRUD completo:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Crear clientes
+- Listar clientes
+- Ver detalle de un cliente
+- Editar clientes
+- Eliminar clientes
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+El módulo está organizado bajo una arquitectura por feature, con separación de:
+- Componentes UI
+- DTOs
+- Repositorios
+- Servicios
+- Validaciones
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Estado del proyecto
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Esta versión establece la base funcional del sistema:
+- Autenticación operativa
+- Primer módulo de negocio completamente funcional (Clientes)
+
+---
+
+## Desarrollador
+
+**Cristian Andres Castro Rojas**
