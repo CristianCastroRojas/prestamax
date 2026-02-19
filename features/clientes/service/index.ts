@@ -1,14 +1,14 @@
-export * from "./CreateCliente";
-export * from "./GetAllCliente";
-export * from "./GetByIdCliente";
-export * from "./UpdateCliente";
-export * from "./DeleteCliente";
+export * from "./create-cliente.service";
+export * from "./get-all-clientes.service";
+export * from "./get-cliente-by-id.service";
+export * from "./update-cliente.service";
+export * from "./delete-cliente.service";
 
-import { CreateClienteService } from "./CreateCliente";
-import { GetAllClienteService } from "./GetAllCliente";
-import { GetByIdClienteService } from "./GetByIdCliente";
-import { UpdateClienteService } from "./UpdateCliente";
-import { DeleteClienteService } from "./DeleteCliente";
+import { CreateClienteService } from "./create-cliente.service";
+import { GetAllClienteService } from "./get-all-clientes.service";
+import { GetByIdClienteService } from "./get-cliente-by-id.service";
+import { UpdateClienteService } from "./update-cliente.service";
+import { DeleteClienteService } from "./delete-cliente.service";
 
 /**
  * ClienteService actúa como el punto único de entrada (Facade)
