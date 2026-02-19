@@ -1,6 +1,6 @@
 // features/clientes/data/getClienteById.ts
 import "server-only"; // Esto asegura que este código nunca se filtre al navegador
-import { GetByIdClienteDTO } from "@/features/clientes/dtos/GetByIdClienteDTO";
+import { GetByIdClienteDTO } from "@/features/clientes/dtos/get-cliente-by-id.dto";
 import { ClienteService } from "@/features/clientes/service"; // Importa tu servicio
 
 export async function getClienteById(
