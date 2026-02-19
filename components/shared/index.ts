@@ -1,3 +1,3 @@
-export * from "./AppNavbar";
-export * from "./AppSidebar";
-export * from "./AppFooter";
+export * from "./app-navbar";
+export * from "./app-sidebar";
+export * from "./app-footer";
