@@ -1,5 +1,7 @@
+import { updateClienteSchema } from "@/features/clientes";
 import { ClienteService } from "@/features/clientes/service";
 import { NextResponse } from "next/server";
+import { ZodError } from "zod";
 
 export async function GET(
   req: Request,
@@ -29,13 +31,32 @@ export async function PATCH(
 ) {
   try {
     const { id } = await params;
+
     const clienteId = parseInt(id);
+
+    if (isNaN(clienteId))
+      return NextResponse.json({ error: "ID no válido" }, { status: 400 });
+
     const body = await req.json();
 
-    // Usando la Fachada: Inyectamos el ID en el objeto para cumplir con el DTO
-    const resultado = await ClienteService.update({ ...body, id: clienteId });
+    // ✅ Validación Zod antes de llegar al Service
+    const validatedData = updateClienteSchema.parse(body);
+
+    const resultado = await ClienteService.update({
+      ...validatedData,
+      id: clienteId,
+    });
+
     return NextResponse.json(resultado, { status: 200 });
   } catch (error: unknown) {
+    // ✅ Manejo específico de errores de validación
+    if (error instanceof ZodError) {
+      return NextResponse.json(
+        { success: false, error: "Error de validación", issues: error.issues },
+        { status: 400 },
+      );
+    }
+
     const message =
       error instanceof Error ? error.message : "Error al actualizar";
     const status = message.includes("no existe")
