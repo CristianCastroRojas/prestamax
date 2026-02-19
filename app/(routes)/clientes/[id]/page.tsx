@@ -23,10 +23,11 @@ import {
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { notFound } from "next/navigation";
-import { GetByIdClienteDTO } from "@/features/clientes/dtos/GetByIdClienteDTO";
+import { GetByIdClienteDTO } from "@/features/clientes/dtos/get-cliente-by-id.dto";
 import { cn } from "@/lib/utils";
-import { getClienteById } from "@/features/clientes/data/getClienteById";
+
 import { formatDate, formatDateTime } from "@/lib/formatters/date";
+import { getClienteById } from "@/features/clientes/http/get-cliente-by-id.api";
 
 export default async function ClientePage({
   params,

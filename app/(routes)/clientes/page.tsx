@@ -1,13 +1,14 @@
-import HeaderCliente from "@/features/clientes/components/HeaderCliente/HeaderCliente";
+import HeaderCliente from "@/features/clientes/components/header-cliente/header-cliente";
 import {
   columns,
   ClienteTable,
-} from "@/features/clientes/components/ListaClientes";
-import { ClienteCardMobile } from "@/features/clientes/components/ListaClientes/ClienteCardMobile";
-import { PaginationControls } from "@/features/clientes/components/PaginationControls/PaginationControls";
-import { GetTipoDocumentosService } from "@/features/clientes/repository/TipoDocumentoRepository";
-import { GetUbicacionesService } from "@/features/clientes/repository/UbicacionRepository";
-import { GetAllClienteService } from "@/features/clientes/service/GetAllCliente";
+} from "@/features/clientes/components/lista-clientes";
+import { ClienteCardMobile } from "@/features/clientes/components/lista-clientes/cliente-card-mobile";
+import { PaginationControls } from "@/features/clientes/components/pagination-controls/pagination-controls";
+import { GetTipoDocumentosService } from "@/features/clientes/repository/tipo-documento.repository";
+
+import { GetAllClienteService } from "@/features/clientes/service/get-all-clientes.service";
+import { GetUbicacionesService } from "@/features/ubicaciones";
 
 // Tipado de props para Next.js 15
 type SearchParams = Promise<{ page?: string; limit?: string }>;
