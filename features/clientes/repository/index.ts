@@ -1,3 +1,2 @@
-export * from "./ClienteRepository";
-export * from "./TipoDocumentoRepository";
-export * from "./UbicacionRepository";
+export * from "./cliente.repository";
+export * from "./tipo-documento.repository";
