@@ -1,7 +1,7 @@
 import { SignUp } from "@clerk/nextjs";
 import { LandmarkIcon } from "lucide-react";
 import type { Metadata } from "next";
-import { clerkAppearanceSignUp } from "@/lib/auth/ClerkAppearance";
+import { clerkAppearanceSignUp } from "@/lib/auth/clerk-appearance";
 
 export const metadata: Metadata = {
   title: "Crear cuenta | PrestaMax",
