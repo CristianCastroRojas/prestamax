@@ -11,13 +11,11 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { UpdateClienteDTO } from "../../dtos/UpdateClienteDTO";
-import { EditarClienteForm } from "../EditarClienteForm/EditarClienteForm";
-import { TipoDocumentoDTO } from "../../repository/TipoDocumentoRepository";
-import {
-  CiudadDTO,
-  DepartamentoDTO,
-} from "../../repository/UbicacionRepository";
+import { UpdateClienteDTO } from "../../dtos/update-cliente.dto";
+import { EditarClienteForm } from "../editar-cliente-form/editar-cliente-form";
+import { TipoDocumentoDTO } from "../../repository/tipo-documento.repository";
+import { CiudadDTO, DepartamentoDTO } from "@/features/ubicaciones";
+
 
 interface EditClienteSheetProps {
   cliente: UpdateClienteDTO;
@@ -48,9 +46,7 @@ export function EditClienteSheet({
         </Button>
       </SheetTrigger>
 
-      <SheetContent
-        className="flex flex-col h-full w-full p-0 sm:max-w-lg border-l border-border shadow-2xl"
-      >
+      <SheetContent className="flex flex-col h-full w-full p-0 sm:max-w-lg border-l border-border shadow-2xl">
         <SheetHeader className="px-6 py-6 border-b border-border bg-muted/20">
           <SheetTitle className="text-xl font-bold tracking-tight text-foreground">
             Editar Información
@@ -65,13 +61,13 @@ export function EditClienteSheet({
         </SheetHeader>
 
         <div className="flex-1 overflow-y-auto px-6 py-4">
-            <EditarClienteForm
-              cliente={cliente}
-              onSuccess={() => setIsOpen(false)}
-              tiposDocumento={tiposDocumento}
-              departamentos={departamentos}
-              ciudades={ciudades}
-            />
+          <EditarClienteForm
+            cliente={cliente}
+            onSuccess={() => setIsOpen(false)}
+            tiposDocumento={tiposDocumento}
+            departamentos={departamentos}
+            ciudades={ciudades}
+          />
         </div>
       </SheetContent>
     </Sheet>

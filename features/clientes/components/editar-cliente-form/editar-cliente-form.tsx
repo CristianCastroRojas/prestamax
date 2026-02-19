@@ -43,17 +43,16 @@ import { Calendar } from "@/components/ui/calendar";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { useRouter } from "next/navigation";
-import { updateCliente } from "../../data/updateCliente";
+
 import {
   UpdateClienteInput,
   updateClienteSchema,
 } from "../../schemas/update-cliente.schema";
-import { UpdateClienteDTO } from "../../dtos/UpdateClienteDTO";
-import { TipoDocumentoDTO } from "../../repository/TipoDocumentoRepository";
-import {
-  CiudadDTO,
-  DepartamentoDTO,
-} from "../../repository/UbicacionRepository";
+import { UpdateClienteDTO } from "../../dtos/update-cliente.dto";
+import { TipoDocumentoDTO } from "../../repository/tipo-documento.repository";
+import { CiudadDTO, DepartamentoDTO } from "@/features/ubicaciones";
+import { updateCliente } from "../../http/update-cliente.api";
+
 
 interface Props {
   cliente: UpdateClienteDTO;

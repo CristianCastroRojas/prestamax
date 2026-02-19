@@ -1,10 +1,8 @@
 import { Users } from "lucide-react";
-import { TipoDocumentoDTO } from "../../repository/TipoDocumentoRepository";
-import {
-  CiudadDTO,
-  DepartamentoDTO,
-} from "../../repository/UbicacionRepository";
-import { NuevoClienteTrigger } from "../NuevoClienteTrigger";
+import { TipoDocumentoDTO } from "../../repository/tipo-documento.repository";
+
+import { NuevoClienteTrigger } from "../nuevo-cliente-trigger";
+import { CiudadDTO, DepartamentoDTO } from "@/features/ubicaciones";
 
 interface Props {
   tiposDocumento: TipoDocumentoDTO[];

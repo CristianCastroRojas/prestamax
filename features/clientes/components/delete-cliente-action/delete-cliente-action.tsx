@@ -17,8 +17,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
-
-import { deleteCliente } from "@/features/clientes/data/deleteCliente";
+import { deleteCliente } from "../../http/delete-cliente.api";
 
 interface DeleteClienteActionProps {
   clientId: number;

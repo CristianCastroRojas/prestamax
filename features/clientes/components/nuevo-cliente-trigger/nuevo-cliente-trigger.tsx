@@ -3,12 +3,10 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import { NuevoClienteSheet } from "../NuevoClienteSheet";
-import { TipoDocumentoDTO } from "../../repository/TipoDocumentoRepository";
-import {
-  CiudadDTO,
-  DepartamentoDTO,
-} from "../../repository/UbicacionRepository";
+import { NuevoClienteSheet } from "../nuevo-cliente-sheet";
+import { TipoDocumentoDTO } from "../../repository/tipo-documento.repository";
+import { CiudadDTO, DepartamentoDTO } from "@/features/ubicaciones";
+
 
 interface Props {
   tiposDocumento: TipoDocumentoDTO[];

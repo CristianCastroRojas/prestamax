@@ -7,12 +7,10 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { NuevoClienteForm } from "../NuevoClienteForm";
-import { TipoDocumentoDTO } from "../../repository/TipoDocumentoRepository";
-import {
-  CiudadDTO,
-  DepartamentoDTO,
-} from "../../repository/UbicacionRepository";
+import { NuevoClienteForm } from "../nuevo-cliente-form";
+import { TipoDocumentoDTO } from "../../repository/tipo-documento.repository";
+import { CiudadDTO, DepartamentoDTO } from "@/features/ubicaciones";
+
 
 type Props = {
   open: boolean;

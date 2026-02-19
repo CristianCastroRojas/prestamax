@@ -35,13 +35,12 @@ import {
   CreateClienteInput,
   createClienteSchema,
 } from "../../schemas/create-cliente.schema";
-import { TipoDocumentoDTO } from "../../repository/TipoDocumentoRepository";
-import {
-  CiudadDTO,
-  DepartamentoDTO,
-} from "../../repository/UbicacionRepository";
+import { TipoDocumentoDTO } from "../../repository/tipo-documento.repository";
+
 import { useRouter } from "next/navigation";
-import { createCliente } from "../../data/createCliente";
+import { CiudadDTO, DepartamentoDTO } from "@/features/ubicaciones";
+import { createCliente } from "../../http/create-cliente.api";
+
 
 interface Props {
   onSuccess?: () => void;

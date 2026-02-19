@@ -19,11 +19,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { TipoDocumentoDTO } from "../../repository/TipoDocumentoRepository";
-import {
-  CiudadDTO,
-  DepartamentoDTO,
-} from "../../repository/UbicacionRepository";
+import { TipoDocumentoDTO } from "../../repository/tipo-documento.repository";
+import { CiudadDTO, DepartamentoDTO } from "@/features/ubicaciones";
+
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];

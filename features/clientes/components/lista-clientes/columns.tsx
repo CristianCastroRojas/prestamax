@@ -7,10 +7,10 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { formatDate } from "@/lib/formatters/date";
-import { EditClienteSheet } from "../EditarClienteSheet/EditarClienteSheet";
-import { DeleteClienteAction } from "../DeleteClienteAction/DeleteClienteAction";
+import { EditClienteSheet } from "../editar-cliente-sheet/editar-cliente-sheet";
+import { DeleteClienteAction } from "../delete-cliente-action/delete-cliente-action";
 
-import { GetAllClienteDTO } from "../../dtos/GetAllClienteDTO";
+import { GetAllClienteDTO } from "../../dtos/get-all-clientes.dto";
 
 export type ClienteColumnsList = GetAllClienteDTO;
 

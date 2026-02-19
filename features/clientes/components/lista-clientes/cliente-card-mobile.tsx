@@ -7,14 +7,12 @@ import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 // Importamos tu componente de borrado
 import { cn } from "@/lib/utils";
-import { DeleteClienteAction } from "../DeleteClienteAction/DeleteClienteAction";
+import { DeleteClienteAction } from "../delete-cliente-action/delete-cliente-action";
 import { ClienteColumnsList } from "./columns";
-import { EditClienteSheet } from "../EditarClienteSheet/EditarClienteSheet";
-import { TipoDocumentoDTO } from "../../repository/TipoDocumentoRepository";
-import {
-  CiudadDTO,
-  DepartamentoDTO,
-} from "../../repository/UbicacionRepository";
+import { EditClienteSheet } from "../editar-cliente-sheet/editar-cliente-sheet";
+import { TipoDocumentoDTO } from "../../repository/tipo-documento.repository";
+import { CiudadDTO, DepartamentoDTO } from "@/features/ubicaciones";
+
 
 interface ClienteCardMobileProps {
   cliente: ClienteColumnsList;
