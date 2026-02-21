@@ -3,12 +3,12 @@ export interface GetByIdClienteDTO {
   nombre: string;
   apellido: string;
   numero_documento: string;
-  correo: string;
-  fecha_nacimiento: string | Date;
+  correo: string | null;
+  fecha_nacimiento: string | Date | null;
   telefono: string;
-  
+
   // IDs para el Formulario (Selects)
-  id_tipo_documento: number; 
+  id_tipo_documento: number;
   id_ciudad: number;
   id_departamento: number;
 
