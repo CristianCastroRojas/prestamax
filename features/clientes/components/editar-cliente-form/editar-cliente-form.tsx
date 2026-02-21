@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Path, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -69,6 +69,7 @@ export function EditarClienteForm({
   ciudades,
 }: Props) {
   const [loading, setLoading] = useState(false);
+  const [isMounted, setIsMounted] = useState(false); // Control de hidratación
   const router = useRouter();
 
   const form = useForm<UpdateClienteInput>({
@@ -90,16 +91,50 @@ export function EditarClienteForm({
   });
 
   const deptoSeleccionado = form.watch("id_departamento");
-  const ciudadesFiltradas = ciudades.filter(
-    (c) => c.id_departamento === deptoSeleccionado,
+
+  // Memorizamos las ciudades filtradas
+  const ciudadesFiltradas = useMemo(
+    () => ciudades.filter((c) => c.id_departamento === deptoSeleccionado),
+    [ciudades, deptoSeleccionado],
   );
 
+  // 1. Efecto para montar el componente (Evita errores de hidratación)
   useEffect(() => {
-    // Solo resetear si el departamento cambia y es diferente al inicial del cliente
-    if (deptoSeleccionado !== cliente.id_departamento) {
-      form.setValue("id_ciudad", 0);
+    setIsMounted(true);
+  }, []);
+
+  // 2. Efecto de lógica de autoselección y limpieza
+  useEffect(() => {
+    if (!isMounted) return;
+
+    // Si el depto cambia y no es el original del cliente, limpiamos ciudad
+    if (
+      deptoSeleccionado !== cliente.id_departamento &&
+      deptoSeleccionado !== 0
+    ) {
+      // Solo limpiamos si el depto tiene más de una ciudad,
+      // porque si solo tiene una, la autoseleccionaremos abajo.
+      if (ciudadesFiltradas.length !== 1) {
+        form.setValue("id_ciudad", 0);
+      }
     }
-  }, [deptoSeleccionado, form, cliente.id_departamento]);
+
+    // Autoselección si solo hay una opción disponible
+    if (departamentos.length === 1) {
+      form.setValue("id_departamento", departamentos[0].id_departamento);
+    }
+
+    if (ciudadesFiltradas.length === 1) {
+      form.setValue("id_ciudad", ciudadesFiltradas[0].id_ciudad);
+    }
+  }, [
+    isMounted,
+    deptoSeleccionado,
+    departamentos,
+    ciudadesFiltradas,
+    form,
+    cliente.id_departamento,
+  ]);
 
   const onSubmit = async (values: UpdateClienteInput) => {
     setLoading(true);
@@ -136,6 +171,9 @@ export function EditarClienteForm({
     } finally {
       setLoading(false);
     }
+
+    // Prevenir renderizado hasta que esté montado en el cliente
+    if (!isMounted) return null;
   };
 
   return (
@@ -389,7 +427,9 @@ export function EditarClienteForm({
                   </FormLabel>
                   <Select
                     onValueChange={(v) => field.onChange(Number(v))}
-                    value={field.value ? field.value.toString() : undefined}
+                    value={field.value ? field.value.toString() : ""}
+                    // Bloqueado si solo hay uno
+                    disabled={departamentos.length === 1 || loading}
                   >
                     <FormControl>
                       <SelectTrigger className="bg-background w-full">
@@ -426,8 +466,11 @@ export function EditarClienteForm({
                         ? field.value.toString()
                         : ""
                     }
+                    // Bloqueado si no hay depto o si solo hay una ciudad posible
                     disabled={
-                      !deptoSeleccionado || ciudadesFiltradas.length === 0
+                      !deptoSeleccionado ||
+                      ciudadesFiltradas.length <= 1 ||
+                      loading
                     }
                   >
                     <FormControl>

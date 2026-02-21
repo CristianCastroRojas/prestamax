@@ -55,6 +55,7 @@ export function NuevoClienteForm({
   ciudades,
 }: Props) {
   const [loading, setLoading] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   const form = useForm<CreateClienteInput>({
     resolver: zodResolver(createClienteSchema),
@@ -75,13 +76,38 @@ export function NuevoClienteForm({
   });
 
   const deptoSeleccionado = form.watch("id_departamento");
+
+  // Memorizamos las ciudades filtradas para que la referencia sea estable
   const ciudadesFiltradas = ciudades.filter(
     (c) => c.id_departamento === deptoSeleccionado,
   );
 
   useEffect(() => {
-    form.setValue("id_ciudad", 0);
-  }, [deptoSeleccionado, form]);
+    setIsMounted(true);
+  }, []);
+
+  // Lógica de Autoselección e Inactivación
+  useEffect(() => {
+    if (!isMounted) return;
+
+    // Caso 1: Solo hay un departamento
+    if (departamentos.length === 1) {
+      const unicoDeptoId = departamentos[0].id_departamento;
+      if (form.getValues("id_departamento") !== unicoDeptoId) {
+        form.setValue("id_departamento", unicoDeptoId);
+      }
+    }
+
+    // Caso 2: Solo hay una ciudad para el depto actual
+    if (ciudadesFiltradas.length === 1) {
+      const unicaCiudadId = ciudadesFiltradas[0].id_ciudad;
+      if (form.getValues("id_ciudad") !== unicaCiudadId) {
+        form.setValue("id_ciudad", unicaCiudadId);
+      }
+    }
+  }, [isMounted, departamentos, ciudadesFiltradas, form]);
+
+  if (!isMounted) return null;
 
   const router = useRouter();
 
@@ -354,7 +380,9 @@ export function NuevoClienteForm({
                   </FormLabel>
                   <Select
                     onValueChange={(v) => field.onChange(Number(v))}
-                    value={field.value ? field.value.toString() : undefined}
+                    value={field.value !== 0 ? field.value.toString() : ""}
+                    // CONDICIÓN DE BLOQUEO EXPLÍCITA
+                    disabled={departamentos.length === 1 || loading}
                   >
                     <FormControl>
                       <SelectTrigger className="bg-background w-full">
@@ -386,13 +414,12 @@ export function NuevoClienteForm({
                   </FormLabel>
                   <Select
                     onValueChange={(v) => field.onChange(Number(v))}
-                    value={
-                      field.value && field.value !== 0
-                        ? field.value.toString()
-                        : ""
-                    }
+                    value={field.value !== 0 ? field.value.toString() : ""}
+                    // BLOQUEADO SI: no hay depto, o si solo hay una ciudad disponible
                     disabled={
-                      !deptoSeleccionado || ciudadesFiltradas.length === 0
+                      !deptoSeleccionado ||
+                      ciudadesFiltradas.length <= 1 ||
+                      loading
                     }
                   >
                     <FormControl>
