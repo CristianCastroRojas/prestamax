@@ -22,13 +22,21 @@ export const createClienteSchema = z.object({
   correo: z
     .string()
     .trim()
-    .toLowerCase() // Guarda siempre en minúsculas para evitar duplicados
+    .toLowerCase()
     .email("Debe ser un correo electrónico válido")
-    .max(150),
+    .max(150)
+    .optional()
+    .nullable()
+    .or(z.literal("")),
 
-  fecha_nacimiento: z.string().refine((date) => !isNaN(Date.parse(date)), {
-    message: "Fecha de nacimiento inválida",
-  }),
+  fecha_nacimiento: z
+    .string()
+    .refine((date) => !date || !isNaN(Date.parse(date)), {
+      message: "Fecha de nacimiento inválida",
+    })
+    .optional()
+    .nullable()
+    .or(z.literal("")),
 
   telefono: z
     .string()
@@ -48,7 +56,7 @@ export const createClienteSchema = z.object({
   id_departamento: z.number().int().positive("Seleccione un departamento"),
 
   // Al poner default, Zod permite que este campo no venga en el JSON del body
-  estado: z.boolean()
+  estado: z.boolean(),
 });
 
 export type CreateClienteInput = z.infer<typeof createClienteSchema>;

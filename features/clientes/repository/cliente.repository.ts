@@ -7,23 +7,45 @@ import { UpdateClienteDTO } from "../dtos/update-cliente.dto";
 
 export const ClienteRepository = {
   async create(data: CreateClienteDTO) {
+    const { id_tipo_documento, id_ciudad, id_departamento, ...rest } = data;
     return prisma.cliente.create({
       data: {
-        ...data,
-        fecha_nacimiento: new Date(data.fecha_nacimiento),
+        ...rest,
+        correo: data.correo || null,
+        fecha_nacimiento: data.fecha_nacimiento
+          ? new Date(data.fecha_nacimiento)
+          : null,
+        tipo_documento: { connect: { id_tipo_documento } },
+        ciudad: { connect: { id_ciudad } },
+        departamento: { connect: { id_departamento } },
       },
     });
   },
 
   async update(data: UpdateClienteDTO) {
-    const { id, ...updateData } = data;
+    const { id, id_tipo_documento, id_ciudad, id_departamento, ...updateData } =
+      data;
 
     return prisma.cliente.update({
       where: { id },
       data: {
         ...updateData,
-        ...(updateData.fecha_nacimiento && {
-          fecha_nacimiento: new Date(updateData.fecha_nacimiento),
+        correo:
+          updateData.correo === undefined
+            ? undefined
+            : updateData.correo || null,
+        fecha_nacimiento:
+          updateData.fecha_nacimiento === undefined
+            ? undefined
+            : updateData.fecha_nacimiento
+              ? new Date(updateData.fecha_nacimiento)
+              : null,
+        ...(id_tipo_documento && {
+          tipo_documento: { connect: { id_tipo_documento } },
+        }),
+        ...(id_ciudad && { ciudad: { connect: { id_ciudad } } }),
+        ...(id_departamento && {
+          departamento: { connect: { id_departamento } },
         }),
       },
     });
@@ -57,7 +79,9 @@ export const ClienteRepository = {
         apellido: c.apellido,
         numero_documento: c.numero_documento,
         correo: c.correo,
-        fecha_nacimiento: c.fecha_nacimiento.toISOString(),
+        fecha_nacimiento: c.fecha_nacimiento
+          ? c.fecha_nacimiento.toISOString()
+          : null,
         telefono: c.telefono,
         barrio: c.barrio,
         direccion: c.direccion,
@@ -118,7 +142,8 @@ export const ClienteRepository = {
     });
   },
 
-  async findByCorreo(correo: string) {
+  async findByCorreo(correo?: string | null) {
+    if (!correo) return null;
     return prisma.cliente.findUnique({
       where: { correo },
       select: { id: true },

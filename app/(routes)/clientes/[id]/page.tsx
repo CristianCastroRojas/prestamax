@@ -138,7 +138,9 @@ export default async function ClientePage({
                   Fecha de Nacimiento
                 </p>
                 <p className="text-sm sm:text-base font-medium text-foreground italic">
-                  {formatDate(cliente.fecha_nacimiento)}
+                  {cliente.fecha_nacimiento
+                    ? formatDate(cliente.fecha_nacimiento)
+                    : "No registrada"}
                 </p>
               </div>
             </div>
@@ -170,8 +172,8 @@ export default async function ClientePage({
                   <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/80">
                     Ciudad y Departamento
                   </p>
-                  <p className="text-base sm:text-lg font-bold leading-tight break-words">
-                    {cliente.ciudad_nombre || "No registrada"}
+                  <p className="text-base sm:text-lg font-bold leading-tight wrap-break-words">
+                    {cliente.ciudad_nombre}
                   </p>
                   <p className="text-xs font-medium text-emerald-600/80">
                     {cliente.departamento_nombre}
@@ -184,7 +186,7 @@ export default async function ClientePage({
                   <p className="text-[10px] font-bold uppercase text-muted-foreground">
                     Dirección
                   </p>
-                  <p className="text-sm font-semibold break-words leading-snug">
+                  <p className="text-sm font-semibold wrap-break-words leading-snug">
                     {cliente.direccion || "No registrada"}
                   </p>
                 </div>
@@ -192,7 +194,7 @@ export default async function ClientePage({
                   <p className="text-[10px] font-bold uppercase text-muted-foreground">
                     Barrio
                   </p>
-                  <p className="text-sm font-semibold break-words">
+                  <p className="text-sm font-semibold wrap-break-words">
                     {cliente.barrio || "No registrado"}
                   </p>
                 </div>
@@ -215,7 +217,7 @@ export default async function ClientePage({
                     Correo
                   </p>
                   <p className="text-xs sm:text-sm font-medium truncate">
-                    {cliente.correo || "N/A"}
+                    {cliente.correo || "No Registrado"}
                   </p>
                 </div>
               </div>

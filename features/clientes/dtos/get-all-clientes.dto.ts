@@ -3,8 +3,8 @@ export interface GetAllClienteDTO {
   nombre: string;
   apellido: string;
   numero_documento: string;
-  correo: string;
-  fecha_nacimiento: string;
+  correo: string | null;
+  fecha_nacimiento: string | null;
 
   telefono: string;
   barrio: string;
@@ -14,7 +14,7 @@ export interface GetAllClienteDTO {
   id_ciudad: number;
   id_departamento: number;
   // Estos campos vienen de los JOINs que hicimos en la consulta
-  tipoDocumento: string; 
+  tipoDocumento: string;
   ciudad: string;
   departamento: string;
   created_at: Date | string;
