@@ -12,9 +12,11 @@ export const CreateClienteService = {
       throw new Error("El número de documento ya está registrado.");
     }
 
-    const correoExiste = await ClienteRepository.findByCorreo(data.correo);
-    if (correoExiste) {
-      throw new Error("El correo electrónico ya está registrado.");
+    if (data.correo) {
+      const correoExiste = await ClienteRepository.findByCorreo(data.correo);
+      if (correoExiste) {
+        throw new Error("El correo electrónico ya está registrado.");
+      }
     }
 
     // 2. Persistencia
