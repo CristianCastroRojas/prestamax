@@ -41,7 +41,6 @@ import { useRouter } from "next/navigation";
 import { CiudadDTO, DepartamentoDTO } from "@/features/ubicaciones";
 import { createCliente } from "../../http/create-cliente.api";
 
-
 interface Props {
   onSuccess?: () => void;
   tiposDocumento: TipoDocumentoDTO[];
@@ -309,7 +308,7 @@ export function NuevoClienteForm({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-xs font-bold uppercase text-muted-foreground/80">
-                    Correo Electrónico *
+                    Correo Electrónico
                   </FormLabel>
                   <FormControl>
                     <Input
@@ -317,6 +316,7 @@ export function NuevoClienteForm({
                       placeholder="juan@correo.com"
                       className="bg-background"
                       {...field}
+                      value={field.value ?? ""}
                     />
                   </FormControl>
                   <FormMessage className="text-[11px]" />

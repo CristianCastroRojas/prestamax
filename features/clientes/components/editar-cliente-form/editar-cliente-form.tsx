@@ -53,7 +53,6 @@ import { TipoDocumentoDTO } from "../../repository/tipo-documento.repository";
 import { CiudadDTO, DepartamentoDTO } from "@/features/ubicaciones";
 import { updateCliente } from "../../http/update-cliente.api";
 
-
 interface Props {
   cliente: UpdateClienteDTO;
   onSuccess?: () => void;
@@ -344,7 +343,7 @@ export function EditarClienteForm({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-xs font-bold uppercase text-muted-foreground/80">
-                    Correo Electrónico *
+                    Correo Electrónico
                   </FormLabel>
                   <FormControl>
                     <Input
@@ -352,6 +351,7 @@ export function EditarClienteForm({
                       placeholder="juan@correo.com"
                       className="bg-background"
                       {...field}
+                      value={field.value || ""}
                     />
                   </FormControl>
                   <FormMessage className="text-[11px]" />
