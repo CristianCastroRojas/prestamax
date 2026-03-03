@@ -1,12 +1,5 @@
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
+import Link from "next/link";
+import { notFound } from "next/navigation";
 import {
   User,
   Mail,
@@ -20,30 +13,40 @@ import {
   History,
   Hash,
 } from "lucide-react";
-import Link from "next/link";
-import { buttonVariants } from "@/components/ui/button";
-import { notFound } from "next/navigation";
-import { GetByIdClienteDTO } from "@/features/clientes/dtos/get-cliente-by-id.dto";
-import { cn } from "@/lib/utils";
 
+import { cn } from "@/lib/utils";
 import { formatDate, formatDateTime } from "@/lib/formatters/date";
-import { getClienteById } from "@/features/clientes/http/get-cliente-by-id.api";
+import { Badge } from "@/components/ui/badge";
+import { buttonVariants } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
+
+import { GetByIdClienteDTO } from "@/features/clientes/application/dtos/get-cliente-by-id.dto";
+import { getClienteById } from "@/features/clientes/infrastructure/http/get-cliente-by-id.api";
 
 export default async function ClientePage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
+  // 1. Resolución del ID desde los parámetros de la URL (Next.js 15)
   const { id } = await params;
 
-  // Asumiendo que getClienteById ya devuelve el tipo GetByIdClienteDTO
+  // 2. Obtención de datos del cliente desde la infraestructura
   const cliente: GetByIdClienteDTO | null = await getClienteById(Number(id));
 
+  // 3. Manejo de estado no encontrado
   if (!cliente) notFound();
 
   return (
     <main className="container mx-auto max-w-5xl px-4 py-6 sm:py-8 animate-in fade-in duration-500">
-      {/* Botón Volver - Ajuste de margen en móvil */}
+      {/* Navegación de retorno */}
       <div className="mb-4 sm:mb-6">
         <Link
           href="/clientes"
@@ -57,7 +60,7 @@ export default async function ClientePage({
         </Link>
       </div>
 
-      {/* Header Profile - De vertical en móvil a horizontal en desktop */}
+      {/* Header del Perfil: Resumen visual rápido y estado actual */}
       <div className="mb-6 sm:mb-8 flex flex-col gap-4 sm:gap-6 rounded-2xl border bg-card p-5 sm:p-6 shadow-sm md:flex-row md:items-center md:justify-between">
         <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-5 text-center sm:text-left">
           <div className="flex h-16 w-16 sm:h-20 sm:w-20 shrink-0 items-center justify-center rounded-full bg-primary/10 ring-4 ring-primary/5">
@@ -88,9 +91,9 @@ export default async function ClientePage({
         </div>
       </div>
 
-      {/* Contenido Principal */}
+      {/* Grid de Información Detallada */}
       <div className="grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-12">
-        {/* Card: Documentación - Ocupa 12 columnas en móvil y 7 en desktop */}
+        {/* Sección: Documentación e Identidad */}
         <Card className="lg:col-span-7 overflow-hidden border-t-4 border-t-blue-500/80 shadow-sm">
           <CardHeader className="bg-muted/30 pb-4 p-4 sm:p-6">
             <div className="flex items-center gap-2">
@@ -147,7 +150,7 @@ export default async function ClientePage({
           </CardContent>
         </Card>
 
-        {/* Card: Ubicación - Ocupa 12 columnas en móvil y 5 en desktop */}
+        {/* Sección: Información de Residencia */}
         <Card className="lg:col-span-5 overflow-hidden border-t-4 border-t-emerald-500/80 shadow-sm">
           <CardHeader className="bg-muted/30 pb-4 p-4 sm:p-6">
             <div className="flex items-center gap-2">
@@ -203,11 +206,11 @@ export default async function ClientePage({
           </CardContent>
         </Card>
 
-        {/* Card: Contacto y Auditoría - Grid inteligente (1 col móvil, 2 tablet, 4 desktop) */}
+        {/* Footer: Contacto y Auditoría del Registro */}
         <Card className="lg:col-span-12 overflow-hidden shadow-sm border-muted">
           <CardContent className="p-0">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x border-border/40">
-              {/* Correo */}
+              {/* Correo Electrónico */}
               <div className="flex items-center gap-3 p-4 sm:p-5 hover:bg-muted/20 transition-colors">
                 <div className="p-2 bg-primary/5 rounded-full shrink-0">
                   <Mail className="h-4 w-4 text-primary" />
@@ -222,7 +225,7 @@ export default async function ClientePage({
                 </div>
               </div>
 
-              {/* Teléfono */}
+              {/* Contacto Telefónico */}
               <div className="flex items-center gap-3 p-4 sm:p-5 hover:bg-muted/20 transition-colors">
                 <div className="p-2 bg-primary/5 rounded-full shrink-0">
                   <Phone className="h-4 w-4 text-primary" />
@@ -237,7 +240,7 @@ export default async function ClientePage({
                 </div>
               </div>
 
-              {/* Creado */}
+              {/* Trazabilidad: Creación */}
               <div className="flex items-center gap-3 p-4 sm:p-5 hover:bg-muted/20 transition-colors">
                 <div className="p-2 bg-slate-50 rounded-full shrink-0">
                   <History className="h-4 w-4 text-slate-500" />
@@ -252,7 +255,7 @@ export default async function ClientePage({
                 </div>
               </div>
 
-              {/* Actualizado */}
+              {/* Trazabilidad: Última Actualización */}
               <div className="flex items-center gap-3 p-4 sm:p-5 hover:bg-muted/20 transition-colors">
                 <div className="p-2 bg-slate-50 rounded-full shrink-0">
                   <ShieldCheck className="h-4 w-4 text-slate-500" />
