@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { handleApiError } from "@/features/shared/infrastructure/errors/handle-api-error";
-import { updateClienteSchema } from "@/features/clientes";
+import { updateClienteSchema } from "@/features/clientes/infrastructure/validation/update-cliente.schema";
 import { ClienteService } from "@/features/clientes/application/use-cases";
 
 /**
