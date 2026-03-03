@@ -11,9 +11,8 @@ model Departamento {
   nombre_departamento String @unique @db.VarChar(100) // Recomendado: nombres de depto únicos
 
   ciudades Ciudad[]
-  clientes Cliente[]
-
-  @@map("departamento")
+ 
+   @@map("departamento")
 }
 
 model Ciudad {
@@ -59,9 +58,6 @@ model Cliente {
 
   id_ciudad Int
   ciudad    Ciudad @relation(fields: [id_ciudad], references: [id_ciudad])
-
-  id_departamento Int
-  departamento    Departamento @relation(fields: [id_departamento], references: [id_departamento])
 
   @@map("cliente")
 }

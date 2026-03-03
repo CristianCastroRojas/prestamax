@@ -1,8 +1,12 @@
-import { updateClienteSchema } from "@/features/clientes";
-import { ClienteService } from "@/features/clientes/service";
 import { NextResponse } from "next/server";
-import { ZodError } from "zod";
 
+import { handleApiError } from "@/features/shared/infrastructure/errors/handle-api-error";
+import { updateClienteSchema } from "@/features/clientes";
+import { ClienteService } from "@/features/clientes/application/use-cases";
+
+/**
+ * GET: Obtiene un cliente específico por su ID.
+ */
 export async function GET(
   req: Request,
   { params }: { params: Promise<{ id: string }> },
@@ -11,35 +15,37 @@ export async function GET(
     const { id } = await params;
     const clienteId = parseInt(id);
 
-    if (isNaN(clienteId))
+    // Validación básica del parámetro de ruta
+    if (isNaN(clienteId)) {
       return NextResponse.json({ error: "ID no válido" }, { status: 400 });
+    }
 
-    // Usando la Fachada
     const resultado = await ClienteService.findOne(clienteId);
     return NextResponse.json(resultado, { status: 200 });
   } catch (error: unknown) {
-    const message =
-      error instanceof Error ? error.message : "Error al obtener cliente";
-    const status = message.includes("no existe") ? 404 : 500;
-    return NextResponse.json({ success: false, error: message }, { status });
+    return handleApiError(error);
   }
 }
 
+/**
+ * PATCH: Actualiza parcialmente los datos de un cliente.
+ * Combina el ID de la URL con el cuerpo validado por el esquema de Zod.
+ */
 export async function PATCH(
   req: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const { id } = await params;
-
     const clienteId = parseInt(id);
 
-    if (isNaN(clienteId))
+    if (isNaN(clienteId)) {
       return NextResponse.json({ error: "ID no válido" }, { status: 400 });
+    }
 
     const body = await req.json();
 
-    // ✅ Validación Zod antes de llegar al Service
+    // Validación de esquema para actualización (campos opcionales)
     const validatedData = updateClienteSchema.parse(body);
 
     const resultado = await ClienteService.update({
@@ -49,25 +55,13 @@ export async function PATCH(
 
     return NextResponse.json(resultado, { status: 200 });
   } catch (error: unknown) {
-    // ✅ Manejo específico de errores de validación
-    if (error instanceof ZodError) {
-      return NextResponse.json(
-        { success: false, error: "Error de validación", issues: error.issues },
-        { status: 400 },
-      );
-    }
-
-    const message =
-      error instanceof Error ? error.message : "Error al actualizar";
-    const status = message.includes("no existe")
-      ? 404
-      : message.includes("pertenece")
-        ? 409
-        : 500;
-    return NextResponse.json({ success: false, error: message }, { status });
+    return handleApiError(error);
   }
 }
 
+/**
+ * DELETE: Elimina un cliente del sistema.
+ */
 export async function DELETE(
   req: Request,
   { params }: { params: Promise<{ id: string }> },
@@ -76,13 +70,12 @@ export async function DELETE(
     const { id } = await params;
     const clienteId = parseInt(id);
 
-    // Usando la Fachada
+    // En DELETE la validación del ID suele ser implícita en el servicio,
+    // pero se mantiene la estructura para consistencia.
     const resultado = await ClienteService.remove(clienteId);
+
     return NextResponse.json(resultado, { status: 200 });
   } catch (error: unknown) {
-    const message =
-      error instanceof Error ? error.message : "Error al eliminar";
-    const status = message.includes("no existe") ? 404 : 500;
-    return NextResponse.json({ success: false, error: message }, { status });
+    return handleApiError(error);
   }
 }
