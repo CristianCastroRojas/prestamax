@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Path, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { es } from "date-fns/locale";
 import { toast } from "sonner";
+import { es } from "date-fns/locale";
 import {
   Save,
   Eraser,
@@ -17,8 +17,8 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Calendar } from "@/components/ui/calendar";
 import { Separator } from "@/components/ui/separator";
+import { Calendar } from "@/components/ui/calendar";
 import { Switch } from "@/components/ui/switch";
 import {
   Form,
@@ -30,39 +30,36 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
 
 import { UpdateClienteDTO } from "@/features/clientes/application/dtos/update-cliente.dto";
-import { updateCliente } from "@/features/clientes/infrastructure/http/update-cliente.api";
 import {
-  UpdateClienteInput,
-  updateClienteSchema,
-} from "@/features/clientes/infrastructure/validation/update-cliente.schema";
+  CreateClienteInput,
+  createClienteSchema,
+} from "@/features/clientes/infrastructure/validation/create-cliente.schema";
+import { createCliente } from "@/features/clientes/infrastructure/http/create-cliente.api";
+import { updateCliente } from "@/features/clientes/infrastructure/http/update-cliente.api";
 import {
   useTiposDocumentos,
   TipoDocumentoSelect,
 } from "@/features/tipos-documentos";
 import { useUbicaciones, UbicacionSelects } from "@/features/ubicaciones";
 
-interface Props {
-  // Objeto que contiene los datos actuales del cliente que se van a modificar
-  cliente: UpdateClienteDTO & { id_departamento: number };
-  // Función opcional que se ejecuta tras actualizar el cliente con éxito
+interface ClienteFormProps {
+  // Si se proporciona, el formulario está en modo EDICIÓN
+  cliente?: UpdateClienteDTO & { id_departamento: number };
+  // Callback opcional tras éxito
   onSuccess?: () => void;
 }
 
-export function EditarClienteForm({ cliente, onSuccess }: Props) {
-  // Hooks de React Query para obtener datos con caché
+export function ClienteForm({ cliente, onSuccess }: ClienteFormProps) {
+  const isEditMode = !!cliente;
+  const router = useRouter();
+
+  // Hooks de React Query para datos maestros
   const { data: tiposDocumento = [], isLoading: loadingTipos } =
     useTiposDocumentos();
   const { data: ubicaciones, isLoading: loadingUbicaciones } = useUbicaciones();
@@ -70,58 +67,69 @@ export function EditarClienteForm({ cliente, onSuccess }: Props) {
   const departamentos = ubicaciones?.departamentos ?? [];
   const ciudades = ubicaciones?.ciudades ?? [];
 
-  // Inicializa estados para el control de carga, montaje del componente y navegación
-  // Inicializa estados para el control de carga, montaje del componente y navegación
   const [loading, setLoading] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
-  const router = useRouter();
 
-  // Configura el formulario con validación Zod y precarga los datos actuales del cliente
-  const form = useForm<UpdateClienteInput>({
-    resolver: zodResolver(updateClienteSchema),
+  // Configuración del formulario
+  const form = useForm<CreateClienteInput>({
+    resolver: zodResolver(createClienteSchema),
     defaultValues: {
-      nombre: cliente.nombre,
-      apellido: cliente.apellido,
-      numero_documento: cliente.numero_documento,
-      correo: cliente.correo || "",
-      fecha_nacimiento: cliente.fecha_nacimiento || "",
-      telefono: cliente.telefono || "",
-      direccion: cliente.direccion || "",
-      barrio: cliente.barrio || "",
-      estado: cliente.estado,
-      id_tipo_documento: cliente.id_tipo_documento,
-      id_ciudad: cliente.id_ciudad,
-      id_departamento: cliente.id_departamento,
+      nombre: cliente?.nombre ?? "",
+      apellido: cliente?.apellido ?? "",
+      numero_documento: cliente?.numero_documento ?? "",
+      correo: cliente?.correo ?? "",
+      fecha_nacimiento: cliente?.fecha_nacimiento ?? "",
+      telefono: cliente?.telefono ?? "",
+      direccion: cliente?.direccion ?? "",
+      barrio: cliente?.barrio ?? "",
+      estado: cliente?.estado ?? true,
+      id_tipo_documento: cliente?.id_tipo_documento ?? 0,
+      id_ciudad: cliente?.id_ciudad ?? 0,
+      id_departamento: cliente?.id_departamento ?? 0,
     },
   });
 
-  // Confirma el montaje en el cliente para evitar errores de hidratación con Next.js
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
-  const onSubmit = async (values: UpdateClienteInput) => {
-    // Activa el estado de carga y muestra el mensaje de espera inicial
+  if (!isMounted) return null;
+
+  const onSubmit = async (values: CreateClienteInput) => {
     setLoading(true);
-    const toastId = toast.loading("Actualizando cliente...");
+    const actionLabel = isEditMode ? "Actualizando" : "Registrando";
+    const toastId = toast.loading(`${actionLabel} cliente...`);
 
     try {
-      // Envía los cambios a la API usando el ID del cliente y espera la respuesta
-      const result = await updateCliente(cliente.id, values);
-
-      // Muestra mensaje de éxito, actualiza la vista y ejecuta el callback de cierre
-      toast.success("Actualizado", {
-        description: result.message ?? "Información actualizada correctamente",
-        id: toastId,
-      });
+      if (isEditMode && cliente) {
+        const result = await updateCliente(cliente.id, values);
+        toast.success("Actualizado", {
+          description:
+            result.message ?? "Información actualizada correctamente",
+          id: toastId,
+        });
+      } else {
+        const result = await createCliente(values);
+        toast.success("Completado", {
+          description: result.message ?? "Guardado correctamente",
+          id: toastId,
+        });
+        form.reset();
+      }
 
       router.refresh();
       onSuccess?.();
     } catch (error: any) {
-      // Si el status es 400 (Bad Request), mapea cada error del servidor al input correspondiente
+      if (error.status === 409) {
+        return toast.warning("Dato duplicado", {
+          description: error.message,
+          id: toastId,
+        });
+      }
+
       if (error.status === 400 && Array.isArray(error.issues)) {
         error.issues.forEach((issue: { campo: string; mensaje: string }) => {
-          form.setError(issue.campo as Path<UpdateClienteInput>, {
+          form.setError(issue.campo as Path<CreateClienteInput>, {
             message: issue.mensaje,
           });
         });
@@ -132,18 +140,13 @@ export function EditarClienteForm({ cliente, onSuccess }: Props) {
         });
       }
 
-      // Captura cualquier otro fallo (error 500, red, etc.) y muestra un aviso genérico
       toast.error("Error", {
         description: error.message ?? "No se pudo conectar con el servidor",
         id: toastId,
       });
     } finally {
-      // Desactiva el estado de carga independientemente de si hubo éxito o error
       setLoading(false);
     }
-
-    // Evita intentos de renderizado o procesos adicionales si el componente aún no está montado
-    if (!isMounted) return null;
   };
 
   return (
@@ -152,33 +155,35 @@ export function EditarClienteForm({ cliente, onSuccess }: Props) {
         onSubmit={form.handleSubmit(onSubmit)}
         className="space-y-6 px-4 pb-8 pt-2"
       >
-        {/* --- SECCIÓN: ESTADO DEL CLIENTE (Toggle) --- */}
-        <div className="bg-muted/30 p-4 rounded-xl border border-border/50">
-          <FormField
-            control={form.control}
-            name="estado"
-            render={({ field }) => (
-              <FormItem className="flex flex-row items-center justify-between rounded-lg">
-                <div className="space-y-0.5">
-                  <FormLabel className="text-sm font-bold uppercase tracking-wider flex items-center gap-2">
-                    <ShieldCheck className="h-4 w-4 text-primary" />
-                    Estado de la cuenta
-                  </FormLabel>
-                  <FormDescription className="text-xs">
-                    Define si el cliente está activo para realizar operaciones.
-                  </FormDescription>
-                </div>
-                <FormControl>
-                  {/* Interruptor para activar/desactivar el estado del cliente */}
-                  <Switch
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-        </div>
+        {/* --- SECCIÓN: ESTADO DEL CLIENTE (Solo en Edición) --- */}
+        {isEditMode && (
+          <div className="bg-muted/30 p-4 rounded-xl border border-border/50">
+            <FormField
+              control={form.control}
+              name="estado"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-center justify-between rounded-lg">
+                  <div className="space-y-0.5">
+                    <FormLabel className="text-sm font-bold uppercase tracking-wider flex items-center gap-2">
+                      <ShieldCheck className="h-4 w-4 text-primary" />
+                      Estado de la cuenta
+                    </FormLabel>
+                    <FormDescription className="text-xs">
+                      Define si el cliente está activo para realizar
+                      operaciones.
+                    </FormDescription>
+                  </div>
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+          </div>
+        )}
 
         {/* --- SECCIÓN: INFORMACIÓN PERSONAL --- */}
         <div className="space-y-4">
@@ -189,7 +194,6 @@ export function EditarClienteForm({ cliente, onSuccess }: Props) {
           <Separator className="bg-border/60" />
 
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            {/* Campo para el nombre del cliente */}
             <FormField
               control={form.control}
               name="nombre"
@@ -210,7 +214,6 @@ export function EditarClienteForm({ cliente, onSuccess }: Props) {
               )}
             />
 
-            {/* Campo para el apellido del cliente */}
             <FormField
               control={form.control}
               name="apellido"
@@ -231,13 +234,11 @@ export function EditarClienteForm({ cliente, onSuccess }: Props) {
               )}
             />
 
-            {/* Componente centralizado para selección de Tipo de Documento */}
             <TipoDocumentoSelect
               tiposDocumento={tiposDocumento}
               loading={loading || loadingTipos}
             />
 
-            {/* Campo para el número de identificación */}
             <FormField
               control={form.control}
               name="numero_documento"
@@ -258,7 +259,6 @@ export function EditarClienteForm({ cliente, onSuccess }: Props) {
               )}
             />
 
-            {/* Selector de fecha de nacimiento mediante calendario Popover */}
             <FormField
               control={form.control}
               name="fecha_nacimiento"
@@ -314,7 +314,6 @@ export function EditarClienteForm({ cliente, onSuccess }: Props) {
           <Separator className="bg-border/60" />
 
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            {/* Campo para el correo electrónico (opcional) */}
             <FormField
               control={form.control}
               name="correo"
@@ -329,7 +328,7 @@ export function EditarClienteForm({ cliente, onSuccess }: Props) {
                       placeholder="juan@correo.com"
                       className="bg-background"
                       {...field}
-                      value={field.value || ""}
+                      value={field.value ?? ""}
                     />
                   </FormControl>
                   <FormMessage className="text-[11px]" />
@@ -337,7 +336,6 @@ export function EditarClienteForm({ cliente, onSuccess }: Props) {
               )}
             />
 
-            {/* Campo para el número telefónico de contacto */}
             <FormField
               control={form.control}
               name="telefono"
@@ -358,14 +356,12 @@ export function EditarClienteForm({ cliente, onSuccess }: Props) {
               )}
             />
 
-            {/* Componente centralizado para selección de Departamento y Ciudad */}
             <UbicacionSelects
               departamentos={departamentos}
               ciudades={ciudades}
               loading={loading || loadingUbicaciones}
             />
 
-            {/* Campo para el barrio de residencia */}
             <FormField
               control={form.control}
               name="barrio"
@@ -386,7 +382,6 @@ export function EditarClienteForm({ cliente, onSuccess }: Props) {
               )}
             />
 
-            {/* Campo para la dirección detallada de domicilio */}
             <FormField
               control={form.control}
               name="direccion"
@@ -409,9 +404,8 @@ export function EditarClienteForm({ cliente, onSuccess }: Props) {
           </div>
         </div>
 
-        {/* --- SECCIÓN: ACCIONES --- */}
+        {/* --- SECCIÓN DE ACCIONES FINAL --- */}
         <div className="flex flex-col sm:flex-row gap-3 pt-6">
-          {/* Botón de envío que muestra estado de carga */}
           <Button
             type="submit"
             className="flex-1 order-2 sm:order-1 font-bold shadow-sm"
@@ -422,12 +416,11 @@ export function EditarClienteForm({ cliente, onSuccess }: Props) {
             ) : (
               <>
                 <Save className="mr-2 h-4 w-4" />
-                Actualizar Cliente
+                {isEditMode ? "Actualizar Cliente" : "Guardar Cliente"}
               </>
             )}
           </Button>
 
-          {/* Botón para restablecer el formulario a sus valores originales */}
           <Button
             type="button"
             variant="outline"
@@ -436,7 +429,7 @@ export function EditarClienteForm({ cliente, onSuccess }: Props) {
             disabled={loading}
           >
             <Eraser className="mr-2 h-4 w-4" />
-            Restaurar
+            {isEditMode ? "Restaurar" : "Limpiar"}
           </Button>
         </div>
       </form>
