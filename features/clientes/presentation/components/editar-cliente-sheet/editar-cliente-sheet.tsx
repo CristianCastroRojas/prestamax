@@ -21,20 +21,9 @@ import { EditarClienteForm } from "../editar-cliente-form/editar-cliente-form";
 interface EditClienteSheetProps {
   // Datos actuales del cliente para precargar en el formulario
   cliente: UpdateClienteDTO & { id_departamento: number };
-  // Lista de tipos de identificación para el selector
-  tiposDocumento: TipoDocumentoDTO[];
-  // Lista de departamentos para la selección geográfica
-  departamentos: DepartamentoDTO[];
-  // Lista de ciudades que se filtrarán por departamento
-  ciudades: CiudadDTO[];
 }
 
-export function EditClienteSheet({
-  cliente,
-  tiposDocumento,
-  departamentos,
-  ciudades,
-}: EditClienteSheetProps) {
+export function EditClienteSheet({ cliente }: EditClienteSheetProps) {
   // Controla la apertura y cierre del panel lateral (Sheet)
   const [isOpen, setIsOpen] = useState(false);
 
@@ -73,9 +62,6 @@ export function EditClienteSheet({
           <EditarClienteForm
             cliente={cliente}
             onSuccess={() => setIsOpen(false)}
-            tiposDocumento={tiposDocumento}
-            departamentos={departamentos}
-            ciudades={ciudades}
           />
         </div>
       </SheetContent>

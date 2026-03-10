@@ -15,6 +15,7 @@ import { Nunito } from "next/font/google";
 // Componentes internos
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/sonner";
+import { QueryProvider } from "@/components/providers/query-provider";
 
 const nunito = Nunito({
   variable: "--font-nunito",
@@ -37,19 +38,18 @@ export default async function RootLayout({
   const defaultOpen = cookieStore.get("sidebar_state")?.value === "true";
 
   return (
-    <ClerkProvider
-      appearance={{ theme: shadcn }}
-      localization={esES}
-    >
+    <ClerkProvider appearance={{ theme: shadcn }} localization={esES}>
       <html lang="es">
         <body
           className={`${nunito.className} antialiased`}
           cz-shortcut-listen="true"
         >
-          <SidebarProvider defaultOpen={defaultOpen}>
-            <main className="flex-1">{children}</main>
-          </SidebarProvider>
-          <Toaster richColors closeButton position="top-right"/>
+          <QueryProvider>
+            <SidebarProvider defaultOpen={defaultOpen}>
+              <main className="flex-1">{children}</main>
+            </SidebarProvider>
+          </QueryProvider>
+          <Toaster richColors closeButton position="top-right" />
         </body>
       </html>
     </ClerkProvider>

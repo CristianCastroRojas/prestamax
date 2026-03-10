@@ -1,3 +1,4 @@
+import "server-only";
 import { TipoDocumentoRepository } from "../../infrastructure/repositories/tipo-documento.repository";
 import { TipoDocumentoDTO } from "../dtos/tipo-documento.dto";
 import { DatabaseError } from "@/features/shared/domain/errors";

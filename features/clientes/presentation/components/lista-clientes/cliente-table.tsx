@@ -27,20 +27,11 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   // Datos que se mostrarán en las filas
   data: TData[];
-  // Lista de tipos de identificación para el selector de nuevo cliente
-  tiposDocumento: TipoDocumentoDTO[];
-  // Lista de departamentos para la selección geográfica inicial
-  departamentos: DepartamentoDTO[];
-  // Lista maestra de ciudades para el formulario de registro
-  ciudades: CiudadDTO[];
 }
 
 export function ClienteTable<TData, TValue>({
   columns,
   data,
-  tiposDocumento,
-  departamentos,
-  ciudades,
 }: DataTableProps<TData, TValue>) {
   // Estado para manejar el ordenamiento de las columnas
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -55,12 +46,6 @@ export function ClienteTable<TData, TValue>({
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    // 'meta' permite inyectar datos adicionales accesibles desde cualquier columna
-    meta: {
-      tiposDocumento,
-      departamentos,
-      ciudades,
-    },
   });
 
   return (

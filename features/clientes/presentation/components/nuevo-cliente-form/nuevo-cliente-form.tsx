@@ -39,32 +39,26 @@ import {
 } from "@/features/clientes/infrastructure/validation/create-cliente.schema";
 import { createCliente } from "@/features/clientes/infrastructure/http/create-cliente.api";
 import {
-  TipoDocumentoDTO,
+  useTiposDocumentos,
   TipoDocumentoSelect,
 } from "@/features/tipos-documentos";
-import {
-  CiudadDTO,
-  DepartamentoDTO,
-  UbicacionSelects,
-} from "@/features/ubicaciones";
+import { useUbicaciones, UbicacionSelects } from "@/features/ubicaciones";
 
 interface Props {
   // Función opcional que se ejecuta tras registrar el cliente con éxito
   onSuccess?: () => void;
-  // Lista de tipos de identificación para el selector
-  tiposDocumento: TipoDocumentoDTO[];
-  // Lista de departamentos disponibles para la selección geográfica
-  departamentos: DepartamentoDTO[];
-  // Lista completa de ciudades que se filtrarán según el departamento elegido
-  ciudades: CiudadDTO[];
 }
 
-export function NuevoClienteForm({
-  onSuccess,
-  tiposDocumento,
-  departamentos,
-  ciudades,
-}: Props) {
+export function NuevoClienteForm({ onSuccess }: Props) {
+  // Hooks de React Query para obtener datos con caché
+  const { data: tiposDocumento = [], isLoading: loadingTipos } =
+    useTiposDocumentos();
+  const { data: ubicaciones, isLoading: loadingUbicaciones } = useUbicaciones();
+
+  const departamentos = ubicaciones?.departamentos ?? [];
+  const ciudades = ubicaciones?.ciudades ?? [];
+
+  // Estados para controlar la carga del formulario y el renderizado en cliente
   // Estados para controlar la carga del formulario y el renderizado en cliente
   const [loading, setLoading] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
@@ -211,7 +205,7 @@ export function NuevoClienteForm({
             {/* Componente centralizado para selección de Tipo de Documento */}
             <TipoDocumentoSelect
               tiposDocumento={tiposDocumento}
-              loading={loading}
+              loading={loading || loadingTipos}
             />
 
             {/* Campo para el número de identificación */}
@@ -339,7 +333,7 @@ export function NuevoClienteForm({
             <UbicacionSelects
               departamentos={departamentos}
               ciudades={ciudades}
-              loading={loading}
+              loading={loading || loadingUbicaciones}
             />
 
             {/* Campo para el barrio */}

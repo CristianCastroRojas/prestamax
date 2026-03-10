@@ -9,18 +9,9 @@ import { TipoDocumentoDTO } from "@/features/tipos-documentos";
 import { CiudadDTO, DepartamentoDTO } from "@/features/ubicaciones";
 import { NuevoClienteSheet } from "../nuevo-cliente-sheet";
 
-interface Props {
-  // Listas maestras necesarias para el formulario que se abrirá
-  tiposDocumento: TipoDocumentoDTO[];
-  departamentos: DepartamentoDTO[];
-  ciudades: CiudadDTO[];
-}
+interface Props {}
 
-export function NuevoClienteTrigger({
-  tiposDocumento,
-  departamentos,
-  ciudades,
-}: Props) {
+export function NuevoClienteTrigger({}: Props) {
   // Estado local para controlar la apertura del modal/sheet de creación
   const [open, setOpen] = useState(false);
 
@@ -37,13 +28,7 @@ export function NuevoClienteTrigger({
       </Button>
 
       {/* Componente que renderiza el formulario lateral (Sheet) */}
-      <NuevoClienteSheet
-        open={open}
-        onClose={() => setOpen(false)}
-        tiposDocumento={tiposDocumento}
-        departamentos={departamentos}
-        ciudades={ciudades}
-      />
+      <NuevoClienteSheet open={open} onClose={() => setOpen(false)} />
     </>
   );
 }

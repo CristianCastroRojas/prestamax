@@ -10,28 +10,16 @@ import {
 
 import { TipoDocumentoDTO } from "@/features/tipos-documentos";
 import { CiudadDTO, DepartamentoDTO } from "@/features/ubicaciones";
-import { NuevoClienteForm } from "../nuevo-cliente-form";
+import { NuevoClienteForm } from "../nuevo-cliente-form/nuevo-cliente-form";
 
 type Props = {
   // Estado de visibilidad controlado desde el componente padre
   open: boolean;
   // Función para cerrar el panel lateral (Sheet)
   onClose: () => void;
-  // Lista de tipos de identificación para el selector de nuevo cliente
-  tiposDocumento: TipoDocumentoDTO[];
-  // Lista de departamentos para la selección geográfica inicial
-  departamentos: DepartamentoDTO[];
-  // Lista maestra de ciudades para el formulario de registro
-  ciudades: CiudadDTO[];
 };
 
-export function NuevoClienteSheet({
-  open,
-  onClose,
-  tiposDocumento,
-  departamentos,
-  ciudades,
-}: Props) {
+export function NuevoClienteSheet({ open, onClose }: Props) {
   return (
     <Sheet open={open} onOpenChange={onClose}>
       {/* Panel lateral con scroll interno y diseño consistente con la edición */}
@@ -49,12 +37,7 @@ export function NuevoClienteSheet({
 
         {/* Contenedor del formulario con scroll independiente para formularios largos */}
         <div className="flex-1 overflow-y-auto px-6 py-4">
-          <NuevoClienteForm
-            onSuccess={onClose}
-            tiposDocumento={tiposDocumento}
-            departamentos={departamentos}
-            ciudades={ciudades}
-          />
+          <NuevoClienteForm onSuccess={onClose} />
         </div>
       </SheetContent>
     </Sheet>

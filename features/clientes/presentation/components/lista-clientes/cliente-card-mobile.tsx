@@ -17,20 +17,9 @@ import { DeleteClienteAction } from "../delete-cliente-action/delete-cliente-act
 interface ClienteCardMobileProps {
   // Datos del cliente provenientes de la lista de columnas
   cliente: ClienteColumnsList;
-  // Lista de tipos de identificación para el selector de nuevo cliente
-  tiposDocumento: TipoDocumentoDTO[];
-  // Lista de departamentos para la selección geográfica inicial
-  departamentos: DepartamentoDTO[];
-  // Lista maestra de ciudades para el formulario de registro
-  ciudades: CiudadDTO[];
 }
 
-export function ClienteCardMobile({
-  cliente,
-  tiposDocumento,
-  departamentos,
-  ciudades,
-}: ClienteCardMobileProps) {
+export function ClienteCardMobile({ cliente }: ClienteCardMobileProps) {
   // Formatea el estado booleano a texto legible
   const estado = cliente.estado ? "Activo" : "Inactivo";
 
@@ -131,12 +120,7 @@ export function ClienteCardMobile({
             </Link>
 
             {/* Componente para abrir el formulario de edición */}
-            <EditClienteSheet
-              cliente={cliente}
-              tiposDocumento={tiposDocumento}
-              departamentos={departamentos}
-              ciudades={ciudades}
-            />
+            <EditClienteSheet cliente={cliente} />
 
             {/* Componente para gestionar la eliminación del cliente */}
             <DeleteClienteAction

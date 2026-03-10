@@ -1,6 +1,4 @@
 import { GetAllClienteUseCase as GetAllClienteService } from "@/features/clientes/application/use-cases/get-all-clientes.use-case";
-import { GetTipoDocumentosUseCase } from "@/features/tipos-documentos/application/use-cases/get-tipo-documentos.use-case";
-import { GetUbicacionesUseCase } from "@/features/ubicaciones/application/use-cases/get-ubicaciones.use-case";
 
 import HeaderCliente from "@/features/clientes/presentation/components/header-cliente/header-cliente";
 import {
@@ -21,13 +19,8 @@ export default async function ClientesPage(props: {
   const page = Number(searchParams.page) || 1;
   const limit = Number(searchParams.limit) || 10;
 
-  // 2. Ejecución de fetch de datos en paralelo para optimizar el tiempo de carga (LCP)
-  const [tiposDocumento, { departamentos, ciudades }, response] =
-    await Promise.all([
-      GetTipoDocumentosUseCase.execute(),
-      GetUbicacionesUseCase.execute(),
-      GetAllClienteService.execute(page, limit),
-    ]);
+  // 2. Ejecución de fetch de datos de clientes
+  const response = await GetAllClienteService.execute(page, limit);
 
   // 3. Extracción de la lista de clientes y metadatos de paginación
   const { data: clientes, meta } = response;
@@ -35,36 +28,20 @@ export default async function ClientesPage(props: {
   return (
     <section className="w-full p-4">
       <div className="mx-auto w-full max-w-7xl space-y-4 sm:space-y-6">
-        {/* Cabecera con acciones globales y datos maestros */}
-        <HeaderCliente
-          tiposDocumento={tiposDocumento}
-          departamentos={departamentos}
-          ciudades={ciudades}
-        />
+        {/* Cabecera con acciones globales */}
+        <HeaderCliente />
 
         <div className="w-full border rounded-lg bg-white shadow-sm overflow-hidden">
           {/* VISTA DESKTOP: Tabla optimizada para pantallas grandes */}
           <div className="hidden lg:block">
-            <ClienteTable
-              columns={columns}
-              data={clientes}
-              tiposDocumento={tiposDocumento}
-              departamentos={departamentos}
-              ciudades={ciudades}
-            />
+            <ClienteTable columns={columns} data={clientes} />
           </div>
 
           {/* VISTA MÓVIL: Lista de tarjetas para pantallas pequeñas */}
           <div className="lg:hidden p-4 space-y-4">
             {clientes.length > 0 ? (
               clientes.map((cliente) => (
-                <ClienteCardMobile
-                  key={cliente.id}
-                  cliente={cliente}
-                  tiposDocumento={tiposDocumento}
-                  departamentos={departamentos}
-                  ciudades={ciudades}
-                />
+                <ClienteCardMobile key={cliente.id} cliente={cliente} />
               ))
             ) : (
               <div className="text-center py-10 text-muted-foreground">
