@@ -1,3 +1,4 @@
+import "server-only";
 import { UbicacionRepository } from "../../infrastructure/repositories/ubicacion.repository";
 import { DatabaseError } from "@/features/shared/domain/errors";
 
