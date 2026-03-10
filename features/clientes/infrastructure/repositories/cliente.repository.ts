@@ -13,7 +13,7 @@ import { ClienteMapper } from "../mappers/cliente.mapper";
  */
 export const ClienteRepository: IClienteRepository = {
   async create(data: CreateClienteDTO): Promise<Cliente> {
-    const { id_tipo_documento, id_ciudad, ...rest } = data;
+    const { id_tipo_documento, id_ciudad, id_departamento, ...rest } = data;
 
     const created = await prisma.cliente.create({
       data: {
@@ -32,7 +32,8 @@ export const ClienteRepository: IClienteRepository = {
   },
 
   async update(data: UpdateClienteDTO): Promise<Cliente> {
-    const { id, id_tipo_documento, id_ciudad, ...updateData } = data;
+    const { id, id_tipo_documento, id_ciudad, id_departamento, ...updateData } =
+      data;
 
     const updated = await prisma.cliente.update({
       where: { id },

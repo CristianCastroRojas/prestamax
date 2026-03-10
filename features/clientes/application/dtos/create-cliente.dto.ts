@@ -22,4 +22,7 @@ export interface CreateClienteDTO {
 
   // Estado administrativo del registro
   estado: boolean;
+
+  // Campo auxiliar utilizado en el UI para filtrado
+  id_departamento?: number;
 }
