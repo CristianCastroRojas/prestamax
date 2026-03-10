@@ -122,13 +122,8 @@ export const columns: ColumnDef<ClienteColumnsList>[] = [
             </Button>
           </Link>
 
-          {/* Componente lateral para edición inyectando metadatos de la tabla */}
-          <EditClienteSheet
-            cliente={cliente}
-            tiposDocumento={meta?.tiposDocumento || []}
-            departamentos={meta?.departamentos || []}
-            ciudades={meta?.ciudades || []}
-          />
+          {/* Componente lateral para edición */}
+          <EditClienteSheet cliente={cliente} />
 
           {/* Acción directa de borrado con diálogo de confirmación */}
           <DeleteClienteAction

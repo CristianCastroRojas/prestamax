@@ -5,20 +5,9 @@ import { CiudadDTO, DepartamentoDTO } from "@/features/ubicaciones";
 
 import { NuevoClienteTrigger } from "../nuevo-cliente-trigger";
 
-interface Props {
-  // Lista de tipos de identificación para el selector de nuevo cliente
-  tiposDocumento: TipoDocumentoDTO[];
-  // Lista de departamentos para la selección geográfica inicial
-  departamentos: DepartamentoDTO[];
-  // Lista maestra de ciudades para el formulario de registro
-  ciudades: CiudadDTO[];
-}
+interface Props {}
 
-export default function HeaderCliente({
-  tiposDocumento,
-  departamentos,
-  ciudades,
-}: Props) {
+export default function HeaderCliente({}: Props) {
   return (
     <header className="flex flex-col gap-4 rounded-lg border border-border bg-card p-5 shadow-sm sm:flex-row sm:items-center sm:justify-between">
       <div className="flex items-start gap-4">
@@ -41,11 +30,7 @@ export default function HeaderCliente({
 
       {/* Acceso directo para la creación de un nuevo registro de cliente */}
       <div className="flex items-center sm:shrink-0">
-        <NuevoClienteTrigger
-          tiposDocumento={tiposDocumento}
-          departamentos={departamentos}
-          ciudades={ciudades}
-        />
+        <NuevoClienteTrigger />
       </div>
     </header>
   );
